@@ -1,0 +1,148 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>user-profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+  <!--
+  <div *ngIf="this.uploadLogo">
+    <ion-progress-bar type="indeterminate"></ion-progress-bar>
+  </div>
+-->
+
+  <form [formGroup]="userForm">
+    <div class="form-container">
+
+      <!-- Section 1: Profile Information -->
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Profile Information</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="flex items-center space-x-4" style="height: 150px;"> 
+            <div class="relative w-28 h-28"> <!-- Profile image container -->
+              <img src="assets/img/avatar.jpg" alt="Profile Image" class="w-full h-full rounded-full object-cover" >
+              <div class="absolute bottom-0 right-0 bg-blue-500 rounded-full"
+                   style="border: 3px solid white; transform: translate(20%, 10%); width: 38px; height: 38px; display: flex; justify-content: center; align-items: center;">
+                <ion-button fill="clear" class="p-0" (click)="fileInput.click()" >
+                  <ion-icon name="camera" class="text-white" style="font-size: 18px;"></ion-icon>
+                </ion-button>
+              </div>
+              <input type="file" #fileInput hidden>
+            </div>
+            
+            <!-- Remove Logo Button -->
+            <div>
+              <ion-button color="danger" class="uppercase text-sm">
+                <ion-icon name="trash" slot="start"></ion-icon>
+                Remove Logo
+              </ion-button>
+            </div>
+          </div>
+          
+
+          <!-- Radio Button Group (Tourist/Guider) -->
+          <ion-item>
+            <ion-label>Are you a Tourist or Guider?</ion-label>
+            <ion-radio-group [formControlName]="'role'">
+              <ion-item>
+                <ion-radio value="TOURIST"></ion-radio>
+                <ion-label>Tourist</ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-radio value="GUIDER"></ion-radio>
+                <ion-label>Guider</ion-label>
+              </ion-item>
+            </ion-radio-group>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- User Information -->
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>User Information</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-item>
+            <ion-label position="floating">Name</ion-label>
+            <ion-input [formControlName]="'firstName'"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Family Name</ion-label>
+            <ion-input [formControlName]="'lastName'"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Username</ion-label>
+            <ion-input [formControlName]="'displayName'"></ion-input>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Section for Contact Information and Document Uploads would similarly be adjusted -->
+
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Contact Information</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+
+          <ion-item>
+            <ion-label position="floating">Phone</ion-label>
+            <ion-input [formControlName]="'phone'"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Email</ion-label>
+            <ion-input [formControlName]="'email'"></ion-input>
+          </ion-item>
+          <!-- Nested FormGroup for Address -->
+          <div formGroupName="address">
+            <ion-item>
+              <ion-label position="floating">Country</ion-label>
+              <ion-input formControlName="country"></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="floating">City</ion-label>
+              <ion-input formControlName="city"></ion-input>
+            </ion-item>
+          </div>
+
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Only show this card if the role is 'TOURIST' -->
+      <ion-card *ngIf="userForm.get('role')?.value === 'TOURIST'">
+        <ion-card-header>
+          <ion-card-title>Upload Your Certificate</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-item>
+            <ion-button fill="clear" (click)="fileInput.click()">Upload Certificate</ion-button>
+            <input type="file" #fileInput hidden (change)="onCertificateUpload($event)" accept=".pdf,image/*">
+          </ion-item>
+
+          <!-- Display uploaded file name -->
+          <ion-item *ngIf="uploadedCertificateName">
+            <ion-label>Uploaded: {{ uploadedCertificateName }}</ion-label>
+            <ion-button fill="clear" color="danger" (click)="removeUploadedCertificate()">Remove</ion-button>
+          </ion-item>
+
+        </ion-card-content>
+      </ion-card>
+
+
+
+      <ion-button color="primary">
+        Save
+        <!--  <ion-spinner *ngIf="this.updating" name="crescent"></ion-spinner>-->
+      </ion-button>
+    </div>
+  </form>
+</ion-content>
