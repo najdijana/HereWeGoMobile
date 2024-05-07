@@ -12,10 +12,7 @@
     <img src="../../../../assets/img/logoNav.png" alt="Logo">
   </div>
 
-  <h2 class="ion-text-center ion-margin-top ion-text-bold">
-    Sign in
-  </h2>
-
+ 
   <form #signInForm="ngForm" (ngSubmit)="login()">
     <ion-item lines="full">
       <ion-label position="floating">E-Mail</ion-label>
@@ -39,6 +36,11 @@
   <p class="ion-text-center ion-padding-top">
     Don't have an account? <a routerLink="/sign-up">Sign up</a>
   </p>
+
+  <p class="ion-text-center ion-padding-top">
+    <a routerLink="/forgot-pass"> Forgot password?</a>
+  </p>
+
 
   <ion-segment class="ion-padding">
     <ion-segment-button (click)="registerWithGoogle()" >
