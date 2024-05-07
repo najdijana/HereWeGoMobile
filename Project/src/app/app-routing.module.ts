@@ -3,7 +3,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: '',
+   path: '',
     redirectTo: 'folder/Inbox',
     pathMatch: 'full'
   },
@@ -18,6 +18,14 @@ const routes: Routes = [
   {
     path: 'loader',
     loadChildren: () => import('./modules/admin/loader/loader.module').then( m => m.LoaderPageModule)
+  },
+  {
+    path: 'sign-in',
+    loadChildren: () => import('./modules/admin/sign-in/sign-in.module').then( m => m.SignInPageModule)
+  },
+  {
+    path: 'sign-up',
+    loadChildren: () => import('./modules/admin/sign-up/sign-up.module').then( m => m.SignUpPageModule)
   }
 ];
 
