@@ -4,10 +4,13 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">loader</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding flex flex-col items-center justify-center bg-gray-100">
+  <!-- Logo -->
+  <div class="flex items-center justify-center mb-6">
+    <img src="../../../../assets/img/logoNav.png" alt="Logo" >
+  </div>
+  
+  <div class="flex items-center justify-center" style="height: 100%;">
+    <ion-spinner color="primary" name="crescent" style="width: 6rem; height: 6rem;"></ion-spinner>
+  </div>
 </ion-content>
