@@ -9,9 +9,9 @@ import {
   updateDoc,
 } from '@angular/fire/firestore';
 import { BehaviorSubject, filter, from, map, Observable, of, switchMap } from 'rxjs';
-import { User } from '../models/user.interface';
 import { AuthService } from './auth.service';
 import { AbstractFirestoreService } from './abstracts/AbstractFirestoreService';
+import { User } from '../models/user.interface';
 
 @Injectable({
   providedIn: 'root',
