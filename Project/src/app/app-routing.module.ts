@@ -30,6 +30,10 @@ const routes: Routes = [
   {
     path: 'forgot-pass',
     loadChildren: () => import('./modules/admin/forgot-pass/forgot-pass.module').then( m => m.ForgotPassPageModule)
+  },
+  {
+    path: 'packages',
+    loadChildren: () => import('./modules/admin/packages/packages.module').then( m => m.PackagesPageModule)
   }
 ];
 

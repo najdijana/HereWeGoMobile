@@ -1,0 +1,65 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>packages</ion-title>
+    <!-- Add filter icon button -->
+    <ion-buttons slot="end">
+      <ion-button expand="block" (click)="presentFilterPopover($event)">Filter
+        <ion-icon name="filter-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<!-- Remaining content -->
+
+
+<ion-content padding>
+  <ion-searchbar [(ngModel)]="searchQuery" (ionChange)="filterPackages()" placeholder="Search by package name"></ion-searchbar>
+
+  <ion-item>
+    <ion-label>Sort By</ion-label>
+    <ion-select [(ngModel)]="selectedSortOption" (ionChange)="sortPackages()">
+      <ion-select-option value="price-low-high">Price: Low to High</ion-select-option>
+      <ion-select-option value="price-high-low">Price: High to Low</ion-select-option>
+      <ion-select-option value="name-a-z">Name: A-Z</ion-select-option>
+      <ion-select-option value="name-z-a">Name: Z-A</ion-select-option>
+      <ion-select-option value="reviews-low-high">Reviews: Low to High</ion-select-option>
+      <ion-select-option value="reviews-high-low">Reviews: High to Low</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-list>
+    <ion-item *ngFor="let package of pagedPackages">
+      <!-- Package item details -->
+      <ion-card>
+        <ion-img [src]="package.image"></ion-img>
+        <ion-card-content>
+          <ion-card-title>{{ package.packageName }}</ion-card-title>
+          <ion-row>
+            <ion-col size="6">
+              <p><ion-icon name="map"></ion-icon> {{ package.place }}</p>
+              <p><ion-icon name="calendar"></ion-icon> {{ package.days }} days</p>
+              <p><ion-icon name="cash-outline"></ion-icon> {{ package.budget }}$</p>
+            </ion-col>
+            <ion-col size="6">
+              <p><ion-icon name="person"></ion-icon> {{ package.persons }} Person</p>
+              <p><ion-icon name="star"></ion-icon> {{ package.review }} <small>({{ package.nbreviews }})</small></p>
+            </ion-col>
+          </ion-row>
+          
+        </ion-card-content>
+        <ion-button expand="block" >Read More</ion-button>
+        <ion-button expand="block" >Book Now</ion-button>
+      </ion-card>
+    </ion-item>
+  </ion-list>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadMore($event)">
+    <ion-infinite-scroll-content loadingSpinner="crescent"></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+</ion-content>
+
