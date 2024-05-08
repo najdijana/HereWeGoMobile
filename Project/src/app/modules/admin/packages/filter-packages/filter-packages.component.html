@@ -1,0 +1,17 @@
+<ion-item lines="none" class="text-lg py-3">
+  <ion-label class="mr-4">Min Price</ion-label>
+  <ion-input type="number" [(ngModel)]="minPrice" class="text-lg py-2"></ion-input>
+</ion-item>
+<ion-item lines="none" class="text-lg py-3">
+  <ion-label class="mr-4">Max Price</ion-label>
+  <ion-input type="number" [(ngModel)]="maxPrice" class="text-lg py-2"></ion-input>
+</ion-item>
+<ion-item lines="none" class="text-lg py-3">
+  <ion-label class="mr-4">Days</ion-label>
+  <ion-input type="number" [(ngModel)]="daysFilter" class="text-lg py-2"></ion-input>
+</ion-item>
+<ion-item lines="none" class="text-lg py-3">
+  <ion-label class="mr-4">Persons</ion-label>
+  <ion-input type="number" [(ngModel)]="personsFilter" class="text-lg py-2"></ion-input>
+</ion-item>
+<ion-button expand="block" (click)="applyFilters()" class="text-lg py-3 px-6">Apply</ion-button>
