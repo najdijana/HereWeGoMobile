@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Packages } from 'src/app/shared/models/packages.interface';
-import { PackageService } from './Services/packages.service';
+import { PackageService } from './services/packages.service';
 import { PopoverController } from '@ionic/angular';
 import { FilterPackagesComponent } from './filter-packages/filter-packages.component';
 

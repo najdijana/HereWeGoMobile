@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { PackagesDetailsPageRoutingModule } from './packages-details-routing.module';
 
 import { PackagesDetailsPage } from './packages-details.page';
+import { PackageResolver } from '../resolver/package.resolver';
 
 @NgModule({
   imports: [
@@ -15,6 +16,8 @@ import { PackagesDetailsPage } from './packages-details.page';
     IonicModule,
     PackagesDetailsPageRoutingModule
   ],
+  providers: [PackageResolver],
+  
   declarations: [PackagesDetailsPage]
 })
 export class PackagesDetailsPageModule {}

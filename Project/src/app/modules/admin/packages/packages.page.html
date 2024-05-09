@@ -51,8 +51,8 @@
           </ion-row>
           
         </ion-card-content>
-        <ion-button expand="block" >Read More</ion-button>
-        <ion-button expand="block" >Book Now</ion-button>
+        <ion-button [routerLink]="'/packages/' + package?.id + '/details'" expand="block" >Read More</ion-button>
+        <ion-button  expand="block" >Book Now</ion-button>
       </ion-card>
     </ion-item>
   </ion-list>

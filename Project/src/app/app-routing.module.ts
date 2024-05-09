@@ -35,10 +35,7 @@ const routes: Routes = [
     path: 'packages',
     loadChildren: () => import('./modules/admin/packages/packages.module').then( m => m.PackagesPageModule)
   },
-  {
-    path: 'packages-details',
-    loadChildren: () => import('./modules/admin/packages/packages-details/packages-details.module').then( m => m.PackagesDetailsPageModule)
-  }
+
 ];
 
 @NgModule({
