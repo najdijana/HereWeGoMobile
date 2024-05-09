@@ -42,8 +42,6 @@ export abstract class AbstractFirestoreDocResolver<T> implements Resolve<T> {
     console.log('buildParentPath 0 --> ', route.params);
     console.log('buildParentPath 1 --> ', route.parent.params);
     console.log('buildParentPath 2 --> ', route.parent.parent?.params);
-    console.log('buildParentPath 3 --> ', route.parent.parent.parent?.params);
-    console.log('buildParentPath 4 --> ', route.parent.parent.parent.parent?.params);
     if (this.parentPathBuilderArray?.length && this.parentPathBuilderArray?.length % 2 === 0) {
       console.log('parentPathBuilderArray', this.parentPathBuilderArray);
       const parentPath: string[] = this.parentPathBuilderArray.map(item => item?.paramKey ? item?.deep ? this.getDeepParentParams(route, item?.deep)[item.paramKey] : route.params[item.paramKey] : item?.path);
