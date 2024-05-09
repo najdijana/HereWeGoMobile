@@ -1,0 +1,184 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>packages-details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Banner -->
+  <div class="relative bg-change">
+    <div class="relative bg-change">
+      <img [src]="package?.image" alt="Banner Image" class="w-full h-auto shadow-banner" style=" margin-bottom: 20px;">
+      <ion-button expand="block" color="primary" (click)="booking()" class="absolute top-1/2 start-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white shadow-xl">Book Now</ion-button>
+    </div>
+  </div>
+
+  <ion-toolbar color="light" class="ion-align-items-center ion-justify-content-between">
+    <ion-label class="ion-text-primary ion-padding-start ion-text-center" style="margin-left: 5%;">
+      <ion-icon color="primary" name="map-outline"></ion-icon>
+      {{package?.place}}
+    </ion-label>
+    <ion-label class="ion-text-primary ion-text-center" style="margin-left: 5%;">
+      <ion-icon color="primary" name="star" class="ion-text-success"></ion-icon>
+      {{package?.review}}
+    </ion-label>
+    <ion-label class="ion-text-primary ion-text-center" style="margin-left: 5%;">
+      <ion-icon color="primary" name="people-outline"></ion-icon>
+      {{package?.persons}}
+    </ion-label>
+    <ion-label class="ion-text-primary ion-padding-end ion-text-center" style="margin-left: 5%;">
+      <ion-icon color="primary" name="cash-outline"></ion-icon>
+      {{package?.budget}}$
+    </ion-label>
+  </ion-toolbar>
+  
+
+  <!-- Title Section -->
+  
+  <div class="ion-text-center ion-padding">
+  <ion-text>
+    <h1>{{package?.packageName}}</h1>
+  </ion-text>
+  </div>
+  
+  <!-- Photo Gallery -->
+  <div class="ion-text-center ion-padding">
+    <ion-text>
+    <h2 class="ion-padding">Image Gallery</h2>
+    </ion-text>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6" *ngFor="let image of package?.gallery">
+          <img [src]="image" alt="Gallery Image" style="height: 150px;">
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <!-- Trip Description -->
+  <div class="ion-text-center ion-padding">
+    <ion-text>
+      <h2>Trip Description</h2>
+    </ion-text>
+    
+    <p>{{package?.description}}</p>
+  </div>
+
+  <!-- Trip Plan -->
+  
+  <div class="ion-text-center ion-padding">
+<ion-list>
+    <ion-item-group *ngFor="let plan of package?.plan; let i = index">
+      <ion-item-divider (click)="togglePlan(i)">
+        <ion-label>Day {{i + 1}}: {{plan.title}}</ion-label>
+        <ion-icon slot="end" [name]="isPlanOpen[i] ? 'chevron-up' : 'chevron-down'"></ion-icon>
+      </ion-item-divider>
+      <ion-item *ngIf="isPlanOpen[i]">
+        <ion-list *ngFor="let todo of plan.todo">
+          <ion-item>{{ todo }}</ion-item>
+        </ion-list>
+      </ion-item>
+    </ion-item-group>
+  </ion-list>
+  </div>
+  <!-- Inclusions & Exclusions Section -->
+  <div class="ion-text-center ion-padding">
+    <ion-text>
+      <h2>Inclusions</h2>
+    </ion-text>
+    
+    <ion-card>
+      <ion-card-content>
+        <ion-list>
+          <ion-item *ngFor="let inclusion of package?.inclusions">
+            <ion-icon name="checkmark-circle" color="primary"></ion-icon>
+            <ion-label>{{ inclusion?.title }}: {{ inclusion?.details }}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+</div>
+
+
+<div class="ion-text-center ion-padding">
+    
+    <ion-text>
+      <h2>Exclusions</h2>
+    </ion-text>
+    <ion-card>
+      <ion-card-content>
+        <ion-list>
+          <ion-item *ngFor="let exclusion of package?.exclusions">
+            <ion-icon name="close-circle" color="danger"></ion-icon>
+            <ion-label>{{ exclusion?.title }}: {{ exclusion?.details }}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- FAQ Section -->
+  <div class="ion-text-center ion-padding">
+    <ion-text>
+      <h2>FAQ</h2>
+    </ion-text>
+    <ion-list>
+      <ion-item-group>
+        <ion-item-divider>
+          <ion-label>Q1. There are many variations of passages?</ion-label>
+        </ion-item-divider>
+        <ion-item>
+          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+        </ion-item>
+      </ion-item-group>
+      <ion-item-group>
+        <ion-item-divider>
+          <ion-label>Q2. Majority have suffered alteration of some form?</ion-label>
+        </ion-item-divider>
+        <ion-item>
+          <p>Contrary to popular belief, Lorem Ipsum is not simply random text.</p>
+        </ion-item>
+      </ion-item-group>
+    </ion-list>
+  </div>
+
+  <!-- Reviews Section -->
+  <div class="ion-text-center ion-padding">
+    <div class="ion-margin">
+      <div class="ion-margin-bottom">
+        <ion-avatar>
+          <img src="assets/img/avatar.jpg" alt="Profile Image">
+        </ion-avatar>
+        <ion-label>Lucia Duffy</ion-label>
+        <ion-icon name="star" color="warning"></ion-icon>
+        <ion-icon name="star" color="warning"></ion-icon>
+        <ion-icon name="star" color="warning"></ion-icon>
+        <ion-icon name="star" color="warning"></ion-icon>
+        <ion-icon name="star-half" color="warning"></ion-icon>
+        <ion-label>(77 likes)</ion-label>
+      </div>
+      <p>Overall, Batroun is a fantastic destination for a relaxing and culturally rich vacation. The combination of history, natural beauty, and welcoming locals made this trip an unforgettable experience. I can't wait to return to Batroun in the future.</p>
+    </div>
+    <div class="ion-margin">
+      <div class="ion-margin-bottom">
+        <ion-avatar>
+          <img src="assets/img/avatar.jpg" alt="Profile Image">
+        </ion-avatar>
+        <ion-label>Bryan Meyer</ion-label>
+        <ion-icon name="star" color="warning"></ion-icon>
+        <ion-icon name="star" color="warning"></ion-icon>
+        <ion-icon name="star" color="warning"></ion-icon>
+        <ion-icon name="star" color="warning"></ion-icon>
+        <ion-icon name="star-half" color="warning"></ion-icon>
+        <ion-label>(77 likes)</ion-label>
+      </div>
+      <p>Overall, Batroun is a fantastic destination for a relaxing and culturally rich vacation. The combination of history, natural beauty, and welcoming locals made this trip an unforgettable experience. I can't wait to return to Batroun in the future.</p>
+    </div>
+    <ion-button (click)="addReview()" color="primary" expand="block">Add A Review</ion-button>
+  </div>
+
+  <!-- Location with Map -->
+  <div class="ion-text-center ion-padding">
+    <!-- MAPS -->
+  </div>
+</ion-content>
