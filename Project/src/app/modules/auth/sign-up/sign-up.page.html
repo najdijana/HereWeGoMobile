@@ -1,0 +1,42 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>sign-up</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding px-7 py-4">
+  <div class="mt-5 ml-2 space-y-2">
+    <!-- <img src="../../../../assets/img/logoNav.png" alt="Logo"> -->
+    <h1>Sign Up</h1>
+    <h4>Create an account here</h4>
+  </div>
+
+ 
+
+  <form #signInNgForm="ngForm" [formGroup]="signUpForm"class="px-1 py-3">
+    <ion-item lines="full" class="mb-3">
+      <ion-label position="floating">Full Name</ion-label>
+      <ion-input 	[formControlName]="'displayName'" name="displayName" required></ion-input>
+    </ion-item>
+
+    <ion-item lines="full" class="mb-3">
+      <ion-label position="floating">E-Mail</ion-label>
+      <ion-input [formControlName]="'email'"   name="email" required></ion-input>
+    </ion-item>
+
+    <ion-item lines="full" class="mb-3 relative">
+      <ion-label position="floating">Password</ion-label>
+      <ion-input [formControlName]="'password'"  name="password" type="{{showPassword ? 'text' : 'password'}}" required></ion-input>
+      <ion-icon class="eyeIcon" slot="end" name="{{showPassword ? 'eye-off' : 'eye'}}" (click)="togglePasswordVisibility()"></ion-icon>
+    </ion-item>
+
+    <ion-button (click)="register()" class="mt-10" expand="block" type="submit" [disabled]="!signUpForm.valid">
+      <ion-label  *ngIf="!signingIn">Sign Up</ion-label>
+      <ion-spinner *ngIf="signingIn" name="dots" color="primary" slot="end"></ion-spinner>
+    </ion-button>
+  </form>
+
+  <p class="ion-text-center py-2">
+    Already have an account? <a class=" text-primary" routerLink="/sign-in">Sign in</a>
+  </p>
+</ion-content>
