@@ -1,35 +1,52 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { UserDataResolver } from './app.resolver';
+import { ProfileResolver } from './modules/auth/user-profile/profile.resolver';
 
 const routes: Routes = [
   {
-   path: '',
-    redirectTo: 'folder/Inbox',
+    path: '',
+    redirectTo: 'loader',
     pathMatch: 'full'
   },
   {
     path: 'folder/:id',
-    loadChildren: () => import('./folder/folder.module').then( m => m.FolderPageModule)
+    loadChildren: () => import('./folder/folder.module').then( m => m.FolderPageModule),
+    resolve:{
+      userDataResolver:UserDataResolver
+  },
   },
   {
-    path: 'user-profile',
-    loadChildren: () => import('./modules/admin/user-profile/user-profile.module').then( m => m.UserProfilePageModule)
+    path: 'user-profile/:id',
+    loadChildren: () => import('./modules/auth/user-profile/user-profile.module').then( m => m.UserProfilePageModule),
+    resolve:{
+      profileRoslver:ProfileResolver,
+      userDataResolver:UserDataResolver
+  },
   },
   {
     path: 'loader',
-    loadChildren: () => import('./modules/admin/loader/loader.module').then( m => m.LoaderPageModule)
+    loadChildren: () => import('./modules/auth/loader/loader.module').then( m => m.LoaderPageModule)
   },
   {
     path: 'sign-in',
-    loadChildren: () => import('./modules/admin/sign-in/sign-in.module').then( m => m.SignInPageModule)
+    loadChildren: () => import('./modules/auth/sign-in/sign-in.module').then( m => m.SignInPageModule)
   },
   {
     path: 'sign-up',
-    loadChildren: () => import('./modules/admin/sign-up/sign-up.module').then( m => m.SignUpPageModule)
+    loadChildren: () => import('./modules/auth/sign-up/sign-up.module').then( m => m.SignUpPageModule)
   },
   {
     path: 'forgot-pass',
-    loadChildren: () => import('./modules/admin/forgot-pass/forgot-pass.module').then( m => m.ForgotPassPageModule)
+    loadChildren: () => import('./modules/auth/forgot-pass/forgot-pass.module').then( m => m.ForgotPassPageModule)
+  },
+  {
+    path: 'top-destinations',
+    loadChildren: () => import('./modules/admin/top-destinations/top-destinations.module').then( m => m.TopDestinationsPageModule)
+  },
+  {
+    path: 'topdestinations-leb',
+    loadChildren: () => import('./modules/admin/topdestinations-leb/topdestinations-leb.module').then( m => m.TopdestinationsLebPageModule)
   },
   {
     path: 'packages',

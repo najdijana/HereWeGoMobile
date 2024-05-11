@@ -1,0 +1,13 @@
+.no-scroll {
+    overflow: hidden;
+    height: 100%;
+  }
+
+  ion-content.no-scroll {
+    --overflow: hidden;
+  }
+  
+  ion-content.no-scroll::part(scroll) {
+    overflow: hidden;
+  }
+  

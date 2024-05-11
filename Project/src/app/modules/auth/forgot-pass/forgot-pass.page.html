@@ -1,0 +1,27 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>forgot-pass</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="mt-5 ml-2 space-y-2">
+    <!-- <img src="../../../../assets/img/logoNav.png" alt="Logo"> -->
+    <h1>Forget Password</h1>
+  </div>
+  <form  #signInNgForm="ngForm"
+  [formGroup]="signInForm">
+       <ion-item lines="full">
+      <ion-label position="floating">E-Mail</ion-label>
+      <ion-input [formControlName]="'email'"  name="email" required></ion-input>
+    </ion-item>
+    <ion-button class="mt-5"  (click)="forgotPassword()" expand="block" type="submit" [disabled]="!signInForm.valid">
+      <ion-label *ngIf="!signingIn">Reset Password</ion-label>
+      <ion-spinner *ngIf="signingIn" name="dots" color="primary" slot="end"></ion-spinner>
+    </ion-button>
+  </form>
+
+  <p class="ion-text-center ion-padding-top">
+    Back to login? <a class="text-primary" routerLink="/sign-in">Sign in </a>
+  </p>
+</ion-content>

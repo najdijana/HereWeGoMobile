@@ -1,0 +1,65 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>sign-in</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="mt-5 ml-2 space-y-2">
+    <!-- <img src="../../../../assets/img/logoNav.png" alt="Logo"> -->
+    <h1>Sign In</h1>
+    <h4>Welcome back</h4>
+  </div>
+
+ 
+  <form  #signInNgForm="ngForm"
+          [formGroup]="signInForm" class="px-1 py-3">
+    <ion-item lines="full" class="mb-3">
+      <ion-label position="floating">E-Mail</ion-label>
+      <ion-input  [formControlName]="'email'" name="email" required></ion-input>
+    </ion-item>
+
+
+    <ion-item lines="full" class="mb-3 relative">
+      <ion-label position="floating">Password</ion-label>
+      <ion-input  [formControlName]="'password'" type="{{showPassword ? 'text' : 'password'}}"  name="password" required></ion-input>
+      <ion-icon slot="end" class="eyeIcon" name="{{showPassword ? 'eye-off' : 'eye'}}" (click)="togglePasswordVisibility()"></ion-icon>
+    </ion-item>
+
+    <p class="ion-text-right mb-7 text-primary">
+      <a routerLink="/forgot-pass"> Forgot password?</a>
+    </p>
+
+    <ion-button  (click)="login()" expand="block" type="submit" [disabled]="!signInForm.valid">
+      <ion-label *ngIf="!signingIn">Sign In</ion-label>
+      <ion-spinner *ngIf="signingIn" name="dots" color="primary" slot="end"></ion-spinner>
+    </ion-button>
+  </form>
+
+  <p class="ion-text-center py-2">
+    Don't have an account? <a class="text-primary" routerLink="/sign-up">Sign up</a>
+  </p>
+
+  <div class="flex items-center justify-center my-5">
+    <div class="flex-grow border-t border-gray-300"></div>
+    <div class="mx-3 text-gray-600 text-sm">Or login with</div>
+    <div class="flex-grow border-t border-gray-300"></div>
+  </div>
+
+  <ion-segment class="ion-padding bg-white">
+    <ion-segment-button (click)="registerWithGoogle()" >
+      <!-- <ion-icon name="logo-google" style="color: #4285F4;"></ion-icon> -->
+      <img src="../../../../assets/img/icons8-google-48.png" style="width: 28px;height: 28px;" alt="Google Logo">
+      <ion-label>Google</ion-label>
+    </ion-segment-button>
+  
+    <ion-segment-button (click)="registerWithFacebook()">
+      <ion-icon style="color: #1877F2;" name="logo-facebook"></ion-icon>
+      <ion-label>Facebook</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+</ion-content>
