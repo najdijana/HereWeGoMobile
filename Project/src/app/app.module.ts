@@ -12,6 +12,10 @@ import {getApp, initializeApp, provideFirebaseApp} from '@angular/fire/app';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from '../environments/environment';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ProfileResolver } from './modules/auth/user-profile/profile.resolver';
 
 
 @NgModule({
@@ -19,8 +23,14 @@ import { environment } from '../environments/environment';
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(),    AngularFireStorageModule,
     provideStorage(() => getStorage()),
-    provideFirebaseApp(() => initializeApp(environment.firebase)),],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    FormsModule,
+    CommonModule,
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+  
+  ],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },ProfileResolver],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
