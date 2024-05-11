@@ -1,5 +1,5 @@
 export interface TopDest{
-    uid:string;
+    id:string;
     Activity:string;
     City: string;
     Image:string;
@@ -8,5 +8,11 @@ export interface TopDest{
     Price: string;
     Phone: string;
     Governate: string;
+}
 
+export interface destination{
+    id:string;
+    name:string;
+    cities:string;
+    image:string;
 }
