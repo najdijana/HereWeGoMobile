@@ -1,0 +1,56 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Activities</ion-title>
+    <!-- Add filter icon button -->
+    <ion-buttons slot="end">
+      <ion-button expand="block" (click)="presentFilterPopover($event)">Filter
+        <ion-icon name="filter-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-searchbar [(ngModel)]="searchQuery" (ionChange)="filterActivities()" placeholder="Search by activity name"></ion-searchbar>
+
+  <ion-item>
+    <ion-label>Sort By</ion-label>
+    <ion-select [(ngModel)]="selectedSortOption" (ionChange)="sortActivities()">
+      <ion-select-option value="price-low-high">Price: Low to High</ion-select-option>
+      <ion-select-option value="price-high-low">Price: High to Low</ion-select-option>
+      <ion-select-option value="name-a-z">Name: A-Z</ion-select-option>
+      <ion-select-option value="name-z-a">Name: Z-A</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-list>
+    <ion-item *ngFor="let activity of pagedActivities">
+      <!-- Activity item details -->
+      <ion-card>
+        <ion-img [src]="activity.Image"></ion-img>
+        <ion-card-content>
+          <ion-card-title>{{ activity.Activity }}</ion-card-title>
+          <ion-row>
+            <ion-col size="6">
+              <p><ion-icon name="map"></ion-icon> {{ activity.Place }}</p>
+              <p><ion-icon name="cash-outline"></ion-icon> {{ activity.Price }}</p>
+            </ion-col>
+            <ion-col size="6">
+              <p><ion-icon name="time"></ion-icon> {{ activity.Session_Duration }} hours</p>
+              <p><ion-icon name="pin"></ion-icon> {{ activity.City }}, {{ activity.District }}</p>
+            </ion-col>
+          </ion-row>
+          
+        </ion-card-content>
+       </ion-card>
+    </ion-item>
+  </ion-list>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadMore($event)">
+    <ion-infinite-scroll-content loadingSpinner="crescent"></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+</ion-content>

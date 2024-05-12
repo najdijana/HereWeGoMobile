@@ -8,7 +8,7 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'folder/:id',
+    path: '',
     loadChildren: () => import('./folder/folder.module').then( m => m.FolderPageModule)
   },
   {
@@ -35,6 +35,15 @@ const routes: Routes = [
     path: 'packages',
     loadChildren: () => import('./modules/admin/packages/packages.module').then( m => m.PackagesPageModule)
   },
+  {
+    path: 'activities',
+    loadChildren: () => import('./modules/admin/activities/activities.module').then( m => m.ActivitiesPageModule)
+  },
+  {
+    path: 'chats',
+    loadChildren: () => import('./modules/admin/chats/chats.module').then( m => m.ChatsPageModule)
+  },
+
 
 ];
 
