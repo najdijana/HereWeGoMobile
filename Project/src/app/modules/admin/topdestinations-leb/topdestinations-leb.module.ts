@@ -8,6 +8,7 @@ import { TopdestinationsLebPageRoutingModule } from './topdestinations-leb-routi
 
 import { TopdestinationsLebPage } from './topdestinations-leb.page';
 import { TopDestinationService } from '../top-destinations/destinations/service/topdestination.service';
+import { FilterDestinationsComponent } from './filter-destinations/filter-destinations.component';
 
 @NgModule({
   imports: [
@@ -16,7 +17,7 @@ import { TopDestinationService } from '../top-destinations/destinations/service/
     IonicModule,
     TopdestinationsLebPageRoutingModule
   ],
-  declarations: [TopdestinationsLebPage],
+  declarations: [TopdestinationsLebPage,FilterDestinationsComponent],
   providers:[TopDestinationService]
 })
 export class TopdestinationsLebPageModule {}

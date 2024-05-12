@@ -1,0 +1,35 @@
+<ion-content>
+    <ion-item lines="none"class="text-lg py-3">
+      <ion-label>City</ion-label>
+      <ion-input [(ngModel)]="cityFilter" placeholder="Enter the city" class="text-lg py-2"></ion-input>
+    </ion-item>
+  
+    <ion-item lines="none"  class="text-lg py-3" >
+      <ion-label>Meal</ion-label>
+      <ion-select multiple [(ngModel)]="mealsFilter" placeholder="Select Meals" class="text-lg py-2 " >
+        <ion-select-option value="Breakfast">Breakfast</ion-select-option>
+        <ion-select-option value="Brunch">Brunch</ion-select-option>
+        <ion-select-option value="Lunch">Lunch</ion-select-option>
+        <ion-select-option value="Dinner">Dinner</ion-select-option>
+        <ion-select-option value="Drinks">Drinks</ion-select-option>
+      </ion-select>
+    </ion-item>
+  
+    <ion-item lines="none" class="text-lg py-3" >
+      <ion-label>Cuisine</ion-label>
+      <ion-input [(ngModel)]="cuisineFilter" placeholder="Enter the cuisine" class="text-lg py-2"></ion-input>
+    </ion-item>
+  
+    <ion-item lines="none"class="text-lg py-3" >
+      <ion-label>Type</ion-label>
+      <ion-select [(ngModel)]="typeFilter" placeholder="Select Type" class="text-lg py-2">
+          <ion-select-option value="Casual">Casual</ion-select-option>
+          <ion-select-option value="Fine Dining">Fine Dining</ion-select-option>
+          <ion-select-option value="Buffet">Buffet</ion-select-option>
+          <ion-select-option value="Fast">Fast</ion-select-option>
+      </ion-select>
+    </ion-item>
+  
+    <ion-button expand="block" (click)="applyFilters()" class="text-lg py-3 px-6">Apply Filters</ion-button>
+
+</ion-content>
