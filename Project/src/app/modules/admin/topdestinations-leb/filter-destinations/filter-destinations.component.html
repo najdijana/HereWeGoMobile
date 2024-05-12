@@ -1,0 +1,33 @@
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label>City</ion-label>
+      <ion-select [(ngModel)]="city" placeholder="Select City">
+        <ion-select-option value="Beirut">Beirut</ion-select-option>
+        <ion-select-option value="Mount Lebanon">Mount Lebanon</ion-select-option>
+        <ion-select-option value="Jbeil-Keserwan">Jbeil-Keserwan</ion-select-option>
+        <ion-select-option value="South Lebanon">South Lebanon</ion-select-option>
+        <ion-select-option value="Nabatieh">Nabatieh</ion-select-option>
+        <ion-select-option value="Baalbek">Baalbek</ion-select-option>
+        <ion-select-option value="Bekaa">Bekaa</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Min Price</ion-label>
+      <ion-input type="number" [(ngModel)]="minPrice" placeholder="Minimum Price"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Max Price</ion-label>
+      <ion-input type="number" [(ngModel)]="maxPrice" placeholder="Maximum Price"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Activity</ion-label>
+      <ion-input [(ngModel)]="activity" placeholder="Enter the activity"></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <ion-button expand="full" (click)="applyFilters()">Apply Filters</ion-button>
+</ion-content>
