@@ -51,7 +51,19 @@ const routes: Routes = [
   {
     path: 'packages',
     loadChildren: () => import('./modules/admin/packages/packages.module').then( m => m.PackagesPageModule)
+  },  {
+    path: 'restaurants',
+    loadChildren: () => import('./modules/admin/restaurants/restaurants.module').then( m => m.RestaurantsPageModule)
   },
+  {
+    path: 'transportations',
+    loadChildren: () => import('./modules/admin/transportations/transportations.module').then( m => m.TransportationsPageModule)
+  },
+  {
+    path: 'accomodations',
+    loadChildren: () => import('./modules/admin/accomodations/accomodations.module').then( m => m.AccomodationsPageModule)
+  },
+
 
 ];
 
