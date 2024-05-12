@@ -8,6 +8,7 @@ export interface TopDest{
     Price: string;
     Phone: string;
     Governate: string;
+    review?:number;
 }
 
 export interface destination{

@@ -1,5 +1,5 @@
 export interface Restaurants{
-    uid:string;
+    id:string;
     Name:string;
     District:string;
     Price_range: string;

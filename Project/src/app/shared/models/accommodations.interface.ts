@@ -1,5 +1,5 @@
 export interface Accommodations{
-    uid:string;
+    id:string;
     Name:string;
     City: string;
     District:string;

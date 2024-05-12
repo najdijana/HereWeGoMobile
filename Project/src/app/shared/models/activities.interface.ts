@@ -1,5 +1,5 @@
 export interface Activities{
-    uid:string;
+    id:string;
     Place:string;
     District:string;
     Price: string;
