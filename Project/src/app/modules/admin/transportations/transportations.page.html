@@ -1,0 +1,44 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Transportations</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding [fullscreen]="true">
+  <ion-searchbar [(ngModel)]="searchQuery" (ionChange)="filterTransportations()" placeholder="Search by transportation name"></ion-searchbar>
+
+  <ion-item>
+    <ion-label>Sort By</ion-label>
+    <ion-select [(ngModel)]="selectedSortOption" (ionChange)="sortTransportations()">
+      <ion-select-option value="name-a-z">Name A-Z</ion-select-option>
+      <ion-select-option value="name-z-a">Name Z-A</ion-select-option>
+      <ion-select-option value="public-first">Public First</ion-select-option>
+      <ion-select-option value="private-first">Private First</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-card *ngFor="let transport of filteredTransportations" class="max-w-sm mx-3 bg-white rounded-xl shadow-md overflow-hidden">
+    <div class="relative">
+        <img [src]="transport.Image" alt="{{ transport.Name }}" class="w-full h-56 object-cover">
+        <a [href]="transport.Link" target="_blank" class="absolute top-4 right-4">
+            <ion-icon name="link-outline" class="text-white text-3xl"></ion-icon>
+        </a>
+    </div>
+    <div class="p-4 space-y-1">
+        <h2 class="text-lg font-semibold text-gray-900">{{ transport.Name }}</h2>
+        <p class="text-sm text-gray-500"><ion-icon class="mr-1" name="phone-portrait-outline"></ion-icon>Contact: {{ transport.Contact }}</p>
+        <div class="flex justify-between items-center">
+            <span class="text-lg font-bold text-gray-900">{{ transport.Price }}</span>
+            <span class="text-sm text-gray-500" *ngIf="transport.Public">Public</span>
+            <span class="text-sm text-gray-500" *ngIf="!transport.Public">Private</span>
+        </div>
+    </div>
+  </ion-card>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadMore($event)">
+    <ion-infinite-scroll-content loadingSpinner="crescent"></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>
