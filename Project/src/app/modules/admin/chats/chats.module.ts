@@ -8,14 +8,17 @@ import { ChatsPageRoutingModule } from './chats-routing.module';
 
 import { ChatsPage } from './chats.page';
 import { UserListComponent } from './user-list/user-list.component';
+import { ChatService } from './services/chat.service';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ChatsPageRoutingModule
+    ChatsPageRoutingModule,
+    
   ],
-  declarations: [ChatsPage, UserListComponent]
+  declarations: [ChatsPage, UserListComponent],
+  providers: [ChatService]
 })
 export class ChatsPageModule {}
