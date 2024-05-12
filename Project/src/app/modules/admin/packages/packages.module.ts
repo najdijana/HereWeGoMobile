@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { PackagesPageRoutingModule } from './packages-routing.module';
 import { PackagesPage } from './packages.page';
-import { PackageService } from './services/packages.service';
 import { FilterPackagesComponent } from './filter-packages/filter-packages.component';
 import { PackageResolver } from './resolver/package.resolver';
+import { PackageService } from './Services/packages.service';
 
 @NgModule({
   imports: [
