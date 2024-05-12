@@ -1,0 +1,50 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Accommodations</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="presentFilterPopover($event)">
+        <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content padding [fullscreen]="true">
+  <ion-searchbar [(ngModel)]="searchQuery" (ionChange)="filterAccommodations()" placeholder="Search by name"></ion-searchbar>
+
+  <ion-item>
+    <ion-label>Sort By</ion-label>
+    <ion-select [(ngModel)]="selectedSortOption" (ionChange)="sortAccommodations()">
+      <ion-select-option value="price-low-high">Price Low to High</ion-select-option>
+      <ion-select-option value="price-high-low">Price High to Low</ion-select-option>
+      <ion-select-option value="name-a-z">Name A-Z</ion-select-option>
+      <ion-select-option value="name-z-a">Name Z-A</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-card *ngFor="let accommodation of filteredAccommodations" class="max-w-sm mx-3 bg-white rounded-xl shadow-md overflow-hidden">
+    <div class="relative">
+        <img [src]="accommodation.Image" alt="{{ accommodation.Name }}" class="w-full h-56 object-cover">
+        <a [href]="accommodation.Link" target="_blank" class="absolute top-4 right-4">
+            <ion-icon name="link-outline" class="text-white text-3xl"></ion-icon>
+        </a>
+    </div>
+    <div class="p-4 space-y-1">
+        <h2 class="text-lg font-semibold text-gray-900">{{ accommodation.Name }}</h2>
+        <p class="text-sm text-gray-500"><ion-icon class="mr-1" name="location-outline"></ion-icon>{{ accommodation.City }}, {{ accommodation.District }}</p>
+        <p class="text-sm text-gray-500"><ion-icon class="mr-1" name="accessibility-outline"></ion-icon>Guests: {{ accommodation.Nb_guests }}, Bedrooms: {{ accommodation.Nb_bedrooms }}</p>
+        <p class="text-sm text-gray-500">Amenities: {{ accommodation.Wifi ? 'WiFi, ' : '' }} {{ accommodation.Pets ? 'Pets Allowed, ' : '' }}{{ accommodation.Parking ? 'Parking' : '' }}</p>
+        <div class="flex justify-between items-center">
+            <span class="text-lg font-bold text-gray-900">${{ accommodation.Price }}</span>
+        </div>
+    </div>
+  </ion-card>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadMore($event)">
+    <ion-infinite-scroll-content loadingSpinner="crescent"></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>
