@@ -1,0 +1,33 @@
+<ion-content>
+  <ion-item>
+    <ion-label>City</ion-label>
+    <ion-input [(ngModel)]="cityFilter" placeholder="Enter city"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Price</ion-label>
+    <ion-range [(ngModel)]="priceFilter" min="0" max="1000" dualKnobs="true" pin="true"></ion-range>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Guests</ion-label>
+    <ion-input type="number" [(ngModel)]="guestsFilter" placeholder="Number of guests"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-checkbox [(ngModel)]="wifiFilter"></ion-checkbox>
+    <ion-label>WiFi</ion-label>
+  </ion-item>
+
+  <ion-item>
+    <ion-checkbox [(ngModel)]="petsFilter"></ion-checkbox>
+    <ion-label>Pets Allowed</ion-label>
+  </ion-item>
+
+  <ion-item>
+    <ion-checkbox [(ngModel)]="parkingFilter"></ion-checkbox>
+    <ion-label>Parking</ion-label>
+  </ion-item>
+
+  <ion-button expand="block" (click)="applyFilters()">Apply Filters</ion-button>
+</ion-content>
