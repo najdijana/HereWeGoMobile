@@ -1,37 +1,50 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+    <ion-title>Top Destinations</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="presentFilterPopover($event)">
+        <ion-icon slot="icon-only" name="funnel-outline"></ion-icon>
+      </ion-button>
     </ion-buttons>
-    <ion-title>destinations</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Top destinations</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content padding [fullscreen]="true">
+  <ion-searchbar [(ngModel)]="searchQuery" (ionChange)="filterDestinations()" placeholder="Search destinations"></ion-searchbar>
 
-  <ion-card *ngFor="let destination of TopDest | async" class="max-w-sm mx-3 bg-white rounded-3xl shadow-md overflow-hidden ">
+  <ion-item>
+    <ion-label>Sort By</ion-label>
+    <ion-select [(ngModel)]="selectedSortOption" (ionChange)="sortDestinations()">
+      <ion-select-option value="name-a-z">Name A-Z</ion-select-option>
+      <ion-select-option value="name-z-a">Name Z-A</ion-select-option>
+      <ion-select-option value="city-a-z">City A-Z</ion-select-option>
+      <ion-select-option value="city-z-a">City Z-A</ion-select-option>
+      <!-- Additional sorting options as needed -->
+    </ion-select>
+  </ion-item>
+
+  <ion-card *ngFor="let destination of filteredDestinations" class="max-w-sm mx-3 bg-white rounded-xl shadow-md overflow-hidden">
     <div class="relative">
       <img [src]="destination.Image" alt="{{ destination.Name }}" class="w-full h-56 object-cover">
-      <ion-icon name="heart" class="absolute top-4 right-4 text-white text-3xl"></ion-icon>
+      <ion-icon name="heart-outline" class="absolute top-4 right-4 text-white text-3xl"></ion-icon>
     </div>
-    <div class="p-4">
-      <!-- <div class="flex items-center">
-        <img src="../../../../../assets/img/avatar.jpg" alt="Guide" class="h-6 w-6 rounded-full">
-        <p class="ml-2 text-sm text-gray-600">Guided by {{ destination.Governate }}</p>
-      </div> -->
-      <h2 class="mt-2 text-lg font-semibold text-gray-900">{{ destination.Activity }}</h2>
-      <p class="text-sm text-gray-500">
-        <ion-icon name="location-outline" class="text-base align-middle mr-1"></ion-icon>
-        {{ destination.City }}
-      </p>
-            <div class="flex justify-between items-center mt-2">
+    <div class="p-4 space-y-1">
+      <h2 class="text-lg font-semibold text-gray-900">{{ destination.Name }}</h2>
+      <p class="text-sm text-gray-500"><ion-icon name="location-outline"></ion-icon> {{ destination.City }}</p>
+      <p class="text-sm text-gray-500"><ion-icon name="walk-outline"></ion-icon> Activities: {{ destination.Activity }}</p>
+      
+      <!-- Phone and Opening Hours -->
+      <p class="text-sm text-gray-500"><ion-icon name="phone-portrait-outline"></ion-icon> {{ destination.Phone }}</p>
+      <p class="text-sm text-gray-500"><ion-icon name="time-outline"></ion-icon> {{ destination.OpenningHours }}</p>
+
+      <div class="flex justify-between items-center">
         <span class="text-lg font-bold text-gray-900">${{ destination.Price }}</span>
+        <!-- <span class="text-sm text-gray-500">Reviews: {{ destination.Reviews }}</span> -->
       </div>
     </div>
   </ion-card>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadMore($event)">
+    <ion-infinite-scroll-content loadingSpinner="crescent"></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>
