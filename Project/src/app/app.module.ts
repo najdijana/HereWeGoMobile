@@ -20,8 +20,13 @@ import { ProfileResolver } from './modules/auth/user-profile/profile.resolver';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule.enablePersistence(),    AngularFireStorageModule,
+  imports: [
+    BrowserModule, 
+    IonicModule.forRoot(), 
+    AppRoutingModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule.enablePersistence(),    
+    AngularFireStorageModule,
     provideStorage(() => getStorage()),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     FormsModule,

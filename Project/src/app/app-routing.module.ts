@@ -63,6 +63,15 @@ const routes: Routes = [
     path: 'accomodations',
     loadChildren: () => import('./modules/admin/accomodations/accomodations.module').then( m => m.AccomodationsPageModule)
   },
+  {
+    path: 'activities',
+    loadChildren: () => import('./modules/admin/activities/activities.module').then( m => m.ActivitiesPageModule)
+  },
+  {
+    path: 'chats',
+    loadChildren: () => import('./modules/admin/chats/chats.module').then( m => m.ChatsPageModule)
+  },
+
 
 
 ];
