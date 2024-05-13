@@ -58,7 +58,10 @@ const routes: Routes = [
   },
   {
     path: 'chats',
-    loadChildren: () => import('./modules/admin/chats/chats.module').then( m => m.ChatsPageModule)
+    loadChildren: () => import('./modules/admin/chats/chats.module').then( m => m.ChatsPageModule),
+    resolve:{
+      userDataResolver:UserDataResolver
+  },
   },
 
 

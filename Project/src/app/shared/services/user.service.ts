@@ -25,7 +25,7 @@ export class UserService extends AbstractFirestoreService<User> {
     constructor(authService: AuthService) {
         super(authService);
   }
-
+ 
     private _list: User;
 
     set list(value: User) {

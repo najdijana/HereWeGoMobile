@@ -1,62 +1,183 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { NavigationExtras, Router } from '@angular/router';
 import { ModalController, PopoverController } from '@ionic/angular';
-import { Observable } from 'rxjs';
+import { Observable, Subject, catchError, distinctUntilChanged, first, forkJoin, map, of, switchMap, take, takeUntil, tap } from 'rxjs';
 import { User } from 'src/app/shared/models/user.interface';
 import { ChatService } from './services/chat.service';
 import { UserService } from 'src/app/shared/services/user.service';
+import { DocumentData, addDoc, collection, doc, getDoc, getDocs, orderBy, query, where } from 'firebase/firestore';
+import { Firestore, collectionData, docData } from '@angular/fire/firestore';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { ref } from 'firebase/storage';
+import { user } from '@angular/fire/auth';
+import { ApiService } from 'src/app/shared/services/api.service';
 
 @Component({
   selector: 'app-chats',
   templateUrl: './chats.page.html',
   styleUrls: ['./chats.page.scss'],
 })
-export class ChatsPage implements OnInit {
+export class ChatsPage implements OnInit , OnDestroy{
 
   @ViewChild('new_chat') modal: ModalController;
   @ViewChild('popover') popover: PopoverController;
 
   open_new_chat = false;
   users: User[];
-    uid : string;
+  uid: string;
+  chatRooms: any;
 
-  /*
-  users = [
-    { id: 1, name: 'jana', photo: '../../../../assets/img/profile.jpg' },
-    { id: 2, name: 'test', photo: '../../../../assets/img/profile.jpg' }
-  ]
-  */
 
-  chatRooms = [
-    { id: 1, name: 'jana', photo: '../../../../assets/img/profile.jpg' },
-    { id: 2, name: 'test', photo: '../../../../assets/img/profile.jpg' }
-  ]
-  constructor(private router: Router, private chatService: ChatService, private userService: UserService) { }
+  constructor(
+    private router: Router,
+    private userService: UserService,
+    private firestore: AngularFirestore,
+    // private api : ApiService,
+     
+    private Afirestore: Firestore,
+   /*  private chatService : ChatService*/
 
-  ngOnInit() {
-    this.uid=this.userService.authService.authUser.uid;
+  ) { }
+
+  unsubscribeAll: Subject<any> = new Subject<any>();
+
+  ngOnDestroy(): void {
+    this.unsubscribeAll.next(null);     
+    this.unsubscribeAll.complete();
   }
 
+
+
+  ngOnInit() {
+    this.uid = this.userService.authService.authUser.uid;
+    //console.log("User ID:", this.uid);
+    this.getChatRooms();
+  }
 
   getUsers() {
     this.userService.collection((ref) =>
       ref.where('uid', '!=', this.uid)
     ).valueChanges().subscribe(users => {
       this.users = users;
+      console.log("Users data fetched:", this.users);
     });
-
   }
-
-  /*  getUsers(){
-this.chatService.getUsers();
-this.users= this.chatService.users;
-  }*/
-
+  getUser(user) {
+    return user
+  }
   newChat() {
     this.open_new_chat = true;
-    if(!this.users)
+    console.log("A new chat is being opened.");
+    if (!this.users) {
+      console.log("Users data is not available. Fetching users data...");
       this.getUsers();
+    } else {
+      console.log("Existing users data:", this.users);
+    }
   }
+
+  getDocsbyId(path) {
+    const dataRef = this.docRef(path);
+    return getDoc(dataRef)
+  }
+
+  collectionRef(path) {
+    return collection(this.Afirestore, path)
+  }
+
+  collectionDataQuery(path, queryFn?) {
+    let dataRef: any = this.collectionRef(path);
+    if (queryFn) {
+      const q = query(dataRef, queryFn);
+      dataRef = q;
+    }
+    const collection_data = collectionData<any>(dataRef);
+    return collection_data;
+  }
+
+  whereQuery(fieldPath, condition, value) {
+    return where(fieldPath, condition, value);
+  }
+
+docRef(path) {
+  return doc(this.Afirestore, path)
+}
+
+docDataQuery(path, id?, queryFn?) {
+  let dataRef: any = this.docRef(path);
+  if (queryFn) {
+    const q = query(dataRef, queryFn);
+    dataRef = q;
+  }
+  let doc_data;
+  if (id) doc_data = docData<any>(dataRef, { idField: 'id' });
+  else doc_data = docData<any>(dataRef);
+  return doc_data;
+}
+
+  getChatRooms() {
+    this.chatRooms = this.collectionDataQuery(
+        'chatRooms',
+        this.whereQuery('members', 'array-contains', this.uid)
+    ).pipe(
+        map((data: any[]) => {
+            console.log('room data: ', data);
+            data.map(element => {
+                const user_data = element.members.filter(x => x != this.uid);
+                console.log(user_data);
+                const user = this.docDataQuery(`users/${user_data[0]}`, true);
+               //  const user = this.api.getDocById('users/${user_data[0]}');
+                element.user = user;
+            });
+            return data;
+        }),
+        switchMap(data => {
+            return of(data);
+        })
+    );
+}
+
+
+
+  async createChatRoom(user_id: string) {
+    try {
+      let room: any;
+
+      const q = query(collection(this.firestore.firestore, 'chatRooms'),
+        where('members', 'in', [[user_id, this.uid], [this.uid, user_id]]));
+      const querySnapshot = await getDocs(q);
+
+      querySnapshot.forEach((doc) => {
+        //   console.log('data from chatRooms', doc.data());
+        // Process each document here
+      });
+
+
+      room = await querySnapshot.docs.map((doc: any) => {
+        let item = doc.data();
+        item.id = doc.id;
+        return item
+      });
+      console.log('existing room', room)
+      if (room?.length > 0)
+        return room[0];
+
+      const data = {
+        members: [this.uid, user_id],
+        type: 'private',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      const roomRef = await addDoc(collection(this.firestore.firestore, 'chatRooms'), data);
+      //  console.log('New room added with ID:', roomRef.id);
+      return roomRef;
+    } catch (e) {
+      //    console.error('Error creating chatroom:', e);
+      throw (e);
+    }
+  }
+
+
 
   onWillDismiss(event: any) { }
 
@@ -64,7 +185,27 @@ this.users= this.chatService.users;
     this.modal.dismiss();
     this.open_new_chat = false;
   }
-  startChat(item) { }
+  async startChat(item) {
+    try {
+      const roomRef = await this.createChatRoom(item?.uid);
+      //  console.log('room reference', roomRef);
+      this.cancel();
+      this.navigateToChatRoom(roomRef.id, item.firstName, item.lastName);
+    } catch (e) {
+      //   console.error('Failed to start chat:', e);
+      // Handle error gracefully, e.g., display an error message to the user
+    }
+  }
+
+  navigateToChatRoom(roomId: string, firstName: string, lastName: string) {
+    const navData: NavigationExtras = {
+      queryParams: {
+        fname: firstName,
+        lname: lastName
+      }
+    };
+    this.router.navigate(['/', 'chats', 'chat-conv', roomId], navData);
+  }
 
   getChat(item) {
     this.router.navigate(['/', 'chats', 'chat-conv', item?.id]);

@@ -45,7 +45,6 @@ export class SignUpPage implements OnInit {
 
   register() {
     if (this.signUpForm.invalid) {
-      //this.snackbar.open('Please check your entries', 'OK', {duration: 5000});
       return;
     }
     this.signingIn = true;
@@ -61,13 +60,6 @@ export class SignUpPage implements OnInit {
     this._afa
         .createUserWithEmailAndPassword(signUpData?.email, signUpData?.password)
         .then((res) => {
-            // Set the alert
-            // this.alert = {
-            //     type: 'success',
-            //     message: 'The registration has been successful! You will be redirected. Please be patient!'
-            // };
-            // Show the alert
-            //this.showAlert = true;
             console.log("logged in successfully",res);
             const data:User={
               uid:res?.user?.uid,
@@ -77,27 +69,15 @@ export class SignUpPage implements OnInit {
             this.usersService.doc(data?.uid).set(data, {merge: true});
             res.user.sendEmailVerification();
             console.log("confirmation email sent");
-            //this.snackbar.open(`Comfirmation Email was sent uccessfully to ${data.email} `, 'OK', {duration: 5000});
-            return Promise.all([res?.user?.updateProfile({displayName: signUpData.displayName})]);
+           return Promise.all([res?.user?.updateProfile({displayName: signUpData.displayName})]);
         })
         .then((res) => {
-          // this.router.navigate(['/verify-email']);
-          //this.router.navigate(['/home']);
-
+      
         })
         .catch((err) => {
           if (err.code === 'auth/email-already-in-use') {
-            // this.alert = {
-            //     type: 'error',
-            //     message: 'This email address is already in use. Please try another.'
-            // };
-        } else {
-            // General error handling
-            // this.alert = {
-            //     type: 'error',
-            //     message: 'Something went wrong. Please try again.'
-            // };
-        }
+          
+        } else {}
             // Show the alert
             this.showAlert = true;
             // Re-enable the form
