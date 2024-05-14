@@ -122,8 +122,6 @@ export class ChatsPage implements OnInit , OnDestroy{
     }
   }
 
-
-
   onWillDismiss(event: any) { }
 
   cancel() {
@@ -137,17 +135,16 @@ export class ChatsPage implements OnInit , OnDestroy{
       const roomRef = await this.createChatRoom(item?.uid);
      console.log('room reference', roomRef);
       this.cancel();
-      this.navigateToChatRoom(roomRef.id, item.firstName, item.lastName);
+      this.navigateToChatRoom(roomRef.id, item.displayName);
     } catch (e) {
          console.error('Failed to start chat:', e);
     }
   }
 
-  navigateToChatRoom(roomId: string, firstName: string, lastName: string) {
+  navigateToChatRoom(roomId: string, displayName: string) {
     const navData: NavigationExtras = {
       queryParams: {
-        fname: firstName,
-        lname: lastName
+        name: displayName,
       }
     };
     this.router.navigate(['/', 'chats', 'chat-conv', roomId], navData);
@@ -159,12 +156,10 @@ export class ChatsPage implements OnInit , OnDestroy{
       console.error('Error: roomId is undefined');
       return;
     }
-    const firstName = item.firstName;
-    const lastName = item.lastName;
+    const displayName = item.displayName;
     const navData: NavigationExtras = {
       queryParams: {
-        fname: firstName,
-        lname: lastName
+        name: displayName,
       }
     };
     this.router.navigate(['/', 'chats', 'chat-conv', item.roomId], navData);

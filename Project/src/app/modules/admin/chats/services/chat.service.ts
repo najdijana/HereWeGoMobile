@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { collectionData } from '@angular/fire/firestore';
+import { collection, orderBy, query } from 'firebase/firestore';
 import { BehaviorSubject, Observable, Subject, catchError, combineLatest, debounceTime, forkJoin, from, map, of, switchMap, take, takeUntil, tap } from 'rxjs';
 import { User } from 'src/app/shared/models/user.interface';
 import { AuthService } from 'src/app/shared/services/auth.service';
@@ -9,73 +11,120 @@ import { AuthService } from 'src/app/shared/services/auth.service';
 })
 export class ChatService {
     private chatRoomsSubject = new BehaviorSubject<any[]>([]);
-  private isLoading = false;
-  private unsubscribeAll = new Subject<void>();
-  chatRooms$ = this.chatRoomsSubject.asObservable();
+    private isLoading = false;
+    private unsubscribeAll = new Subject<void>();
+    chatRooms$ = this.chatRoomsSubject.asObservable();
+    currentUserId: string;
 
-  constructor(private firestore: AngularFirestore) {}
+    public selectedChatRoomMessages: Observable<any>;
 
-  loadChatRoomsAndUsers(uid: string): void {
-    if (this.isLoading) {
-      return;
+    constructor(private firestore: AngularFirestore, private auth: AuthService) {
+        this.currentUserId = this.auth.authUser.uid;
+     }
+    getId() {
+
+        this.currentUserId = this.auth.authUser.uid;
+    }
+    loadChatRoomsAndUsers(uid: string): void {
+        if (this.isLoading) {
+            return;
+        }
+
+        this.isLoading = true;
+
+        this.firestore.collection('chatRooms', ref => ref.where('members', 'array-contains', uid)).snapshotChanges().pipe(
+            takeUntil(this.unsubscribeAll),
+            debounceTime(250),
+            tap(() => {
+                console.log('loading ...');
+                this.isLoading = true;
+            }),
+            switchMap(chatRooms => {
+                const rooms = chatRooms.map(a => {
+                    const data = a.payload.doc.data() as any;
+                    const roomId = a.payload.doc.id;
+                    const otherId = data.members.find(member => member !== uid);
+                    return { roomId, otherId };
+                });
+
+                console.log('Rooms:', rooms);
+
+                const uniqueOtherIds = Array.from(new Set(rooms.map(r => r.otherId)));
+
+                const userRequests = uniqueOtherIds.map(otherId => {
+                    console.log('Current Other ID:', otherId);
+                    return this.firestore.collection('users', ref => ref.where('uid', '==', otherId)).valueChanges().pipe(
+                        take(1),  // Ensure the observable completes after the first emission
+                        map((users: User[]) => users[0]), // Assuming there's only one document per uid
+                        tap(user => {
+                            console.log('Fetched User for otherId', otherId, ':', user);
+                        }),
+                        map(user => ({
+                            ...user,
+                            roomId: rooms.find(r => r.otherId === otherId)?.roomId
+                        }))
+                    );
+                });
+
+                return forkJoin(userRequests) as Observable<User[]>;
+            }),
+            map((users: User[]) => {
+                console.log('Users:', users);
+                return users;
+            })
+        ).subscribe(users => {
+            this.chatRoomsSubject.next(users);
+            this.isLoading = false;
+        }, error => {
+            console.error('Error fetching chat rooms and users:', error);
+            this.isLoading = false;
+        });
     }
 
-    this.isLoading = true;
+    unsubscribe(): void {
+        this.unsubscribeAll.next();
+        this.unsubscribeAll.complete();
+    }
 
-    this.firestore.collection('chatRooms', ref => ref.where('members', 'array-contains', uid)).snapshotChanges().pipe(
-      takeUntil(this.unsubscribeAll),
-      debounceTime(250),
-      tap(() => {
-        console.log('loading ...');
-        this.isLoading = true;
-      }),
-      switchMap(chatRooms => {
-        const rooms = chatRooms.map(a => {
-          const data = a.payload.doc.data() as any;
-          const roomId = a.payload.doc.id;
-          const otherId = data.members.find(member => member !== uid);
-          return { roomId, otherId };
-        });
+    getChatRoomMessages(chatRoomId: string) {
+        this.selectedChatRoomMessages = this.firestore.collection(`chats/${chatRoomId}/messages`, ref =>
+            ref.orderBy('createdAt', 'desc')
+        ).valueChanges().pipe(
+            map((arr: any) => arr.reverse())
+        );
+    }
 
-        console.log('Rooms:', rooms);
+    async sendMessage(chatId: string, msg: string) {
+        try {
+          if (!this.currentUserId) {
+            throw new Error('User is not authenticated');
+          }
+    
+          const new_message = {
+            message: msg,
+            sender: this.currentUserId,
+            createdAt: new Date()
+          };
+    
+          console.log('Chat ID:', chatId);
+          console.log('New Message:', new_message);
+    
+          if (chatId) {
+            await this.firestore.collection(`chats/${chatId}/messages`).add(new_message);
+          }
+        } catch (e) {
+          console.error('Error sending message:', e);
+          throw e;
+        }
+      }
+    
 
-        const uniqueOtherIds = Array.from(new Set(rooms.map(r => r.otherId)));
 
-        const userRequests = uniqueOtherIds.map(otherId => {
-          console.log('Current Other ID:', otherId);
-          return this.firestore.collection('users', ref => ref.where('uid', '==', otherId)).valueChanges().pipe(
-            take(1),  // Ensure the observable completes after the first emission
-            map((users: User[]) => users[0]), // Assuming there's only one document per uid
-            tap(user => {
-              console.log('Fetched User for otherId', otherId, ':', user);
-            }),
-            map(user => ({
-              ...user,
-              roomId: rooms.find(r => r.otherId === otherId)?.roomId
-            }))
-          );
-        });
+    /* selectedChatRoomMessages(){
+   
+     }*/
 
-        return forkJoin(userRequests) as Observable<User[]>;
-      }),
-      map((users: User[]) => {
-        console.log('Users:', users);
-        return users;
-      })
-    ).subscribe(users => {
-      this.chatRoomsSubject.next(users);
-      this.isLoading = false;
-    }, error => {
-      console.error('Error fetching chat rooms and users:', error);
-      this.isLoading = false;
-    });
-  }
 
-  unsubscribe(): void {
-    this.unsubscribeAll.next();
-    this.unsubscribeAll.complete();
-  }
-  
     /*
     async createChatRooms(user_id) {
         try {
@@ -122,9 +171,7 @@ export class ChatService {
             this.getId();
         }
     
-        getId(){
-            this.currentUserId=this.auth.authUser.uid;
-        }
+       
     
         getUsers(){
             this.users=this.api.collectionDataQuery(
@@ -134,6 +181,6 @@ export class ChatService {
         */
 
 
-       
-                    
+
+
 }
