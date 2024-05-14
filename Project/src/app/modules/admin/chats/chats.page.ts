@@ -6,11 +6,7 @@ import { User } from 'src/app/shared/models/user.interface';
 import { ChatService } from './services/chat.service';
 import { UserService } from 'src/app/shared/services/user.service';
 import { DocumentData, addDoc, collection, doc, getDoc, getDocs, orderBy, query, where } from 'firebase/firestore';
-import { Firestore, collectionData, docData } from '@angular/fire/firestore';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { ref } from 'firebase/storage';
-import { user } from '@angular/fire/auth';
-import { ApiService } from 'src/app/shared/services/api.service';
 
 @Component({
   selector: 'app-chats',
@@ -49,20 +45,23 @@ export class ChatsPage implements OnInit , OnDestroy{
   ngOnInit(): void {
     this.chatService.loadChatRoomsAndUsers(this.uid);
 
-    this.chatService.chatRooms$.subscribe(users => {
-      console.log(users);
-      this.chatRooms = users.map(user => ({
-        profilePicture: user.profilePicture,
-        displayName: user.displayName
-      }));
-    });
+      this.chatService.chatRooms$.subscribe(users => {
+        console.log(users);
+        this.chatRooms = users.map(user => ({
+          roomId: user.roomId, // Ensure 'roomId' is correctly set
+          profilePicture: user.profilePicture,
+          displayName: user.displayName,
+          firstName: user.firstName,
+          lastName: user.lastName
+        }));
+      });
   }
 
   ngOnDestroy(): void {
     this.chatService.unsubscribe();
   }
 
-  
+
   getUsers() {
     this.userService.collection((ref) =>
       ref.where('uid', '!=', this.uid)
@@ -84,69 +83,6 @@ export class ChatsPage implements OnInit , OnDestroy{
       console.log("Existing users data:", this.users);
     }
   }
-/*
-  getDocsbyId(path) {
-    const dataRef = this.docRef(path);
-    return getDoc(dataRef)
-  }
-
-  collectionRef(path) {
-    return collection(this.Afirestore, path)
-  }
-
-  collectionDataQuery(path, queryFn?) {
-    let dataRef: any = this.collectionRef(path);
-    if (queryFn) {
-      const q = query(dataRef, queryFn);
-      dataRef = q;
-    }
-    const collection_data = collectionData<any>(dataRef);
-    return collection_data;
-  }
-
-  whereQuery(fieldPath, condition, value) {
-    return where(fieldPath, condition, value);
-  }
-
-docRef(path) {
-  return doc(this.Afirestore, path)
-}
-
-docDataQuery(path, id?, queryFn?) {
-  let dataRef: any = this.docRef(path);
-  if (queryFn) {
-    const q = query(dataRef, queryFn);
-    dataRef = q;
-  }
-  let doc_data;
-  if (id) doc_data = docData<any>(dataRef, { idField: 'id' });
-  else doc_data = docData<any>(dataRef);
-  return doc_data;
-}
-
-  getChatRooms() {
-    this.chatRooms = this.collectionDataQuery(
-        'chatRooms',
-        this.whereQuery('members', 'array-contains', this.uid)
-    ).pipe(
-        map((data: any[]) => {
-            console.log('room data: ', data);
-            data.map(element => {
-                const user_data = element.members.filter(x => x != this.uid);
-                console.log(user_data);
-                const user = this.docDataQuery(`users/${user_data[0]}`, true);
-               //  const user = this.api.getDocById('users/${user_data[0]}');
-                element.user = user;
-            });
-            return data;
-        }),
-        switchMap(data => {
-            return of(data);
-        })
-    );
-}
-
-*/
 
   async createChatRoom(user_id: string) {
     try {
@@ -194,15 +130,16 @@ docDataQuery(path, id?, queryFn?) {
     this.modal.dismiss();
     this.open_new_chat = false;
   }
+
+
   async startChat(item) {
     try {
       const roomRef = await this.createChatRoom(item?.uid);
-      //  console.log('room reference', roomRef);
+     console.log('room reference', roomRef);
       this.cancel();
       this.navigateToChatRoom(roomRef.id, item.firstName, item.lastName);
     } catch (e) {
-      //   console.error('Failed to start chat:', e);
-      // Handle error gracefully, e.g., display an error message to the user
+         console.error('Failed to start chat:', e);
     }
   }
 
@@ -217,12 +154,21 @@ docDataQuery(path, id?, queryFn?) {
   }
 
   getChat(item) {
-    this.router.navigate(['/', 'chats', 'chat-conv', item?.id]);
+     console.log('Navigating to chat with item:', item); // Log the item
+    if (!item.roomId) {
+      console.error('Error: roomId is undefined');
+      return;
+    }
+    const firstName = item.firstName;
+    const lastName = item.lastName;
+    const navData: NavigationExtras = {
+      queryParams: {
+        fname: firstName,
+        lname: lastName
+      }
+    };
+    this.router.navigate(['/', 'chats', 'chat-conv', item.roomId], navData);
   }
-
-
-
-
 
 
   getChatRoomsByUser(currentUserUid: string): Observable<any[]> {
