@@ -26,7 +26,7 @@ export class ChatsPage implements OnInit , OnDestroy{
   users: User[];
   uid: string;
   chatRooms: any;
-
+  otherUsers: any[];
 
   constructor(
     private router: Router,
@@ -34,10 +34,12 @@ export class ChatsPage implements OnInit , OnDestroy{
     private firestore: AngularFirestore,
     // private api : ApiService,
      
-    private Afirestore: Firestore,
-   /*  private chatService : ChatService*/
+    //private Afirestore: Firestore,
+     private chatService : ChatService
 
-  ) { }
+  ) {
+    this.uid = this.userService.authService.authUser.uid;
+   }
 
   unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -48,12 +50,19 @@ export class ChatsPage implements OnInit , OnDestroy{
 
 
 
-  ngOnInit() {
-    this.uid = this.userService.authService.authUser.uid;
-    //console.log("User ID:", this.uid);
-    this.getChatRooms();
-  }
+  ngOnInit(): void {
+    this.chatService.loadChatRoomsAndUsers(this.uid);
 
+    this.chatService.chatRooms$.subscribe(users => {
+      console.log(users);
+      // Ensure users are mapped correctly to chatRooms
+      this.chatRooms = users.map(user => ({
+        profilePicture: user.profilePicture,
+        displayName: user.displayName
+      }));
+    });
+  }
+  
   getUsers() {
     this.userService.collection((ref) =>
       ref.where('uid', '!=', this.uid)
@@ -75,7 +84,7 @@ export class ChatsPage implements OnInit , OnDestroy{
       console.log("Existing users data:", this.users);
     }
   }
-
+/*
   getDocsbyId(path) {
     const dataRef = this.docRef(path);
     return getDoc(dataRef)
@@ -137,7 +146,7 @@ docDataQuery(path, id?, queryFn?) {
     );
 }
 
-
+*/
 
   async createChatRoom(user_id: string) {
     try {
@@ -210,4 +219,67 @@ docDataQuery(path, id?, queryFn?) {
   getChat(item) {
     this.router.navigate(['/', 'chats', 'chat-conv', item?.id]);
   }
+
+
+
+
+
+
+  getChatRoomsByUser(currentUserUid: string): Observable<any[]> {
+    return this.firestore.collection('chatRooms', ref => ref.where('members', 'array-contains', currentUserUid))
+      .snapshotChanges()
+      .pipe(
+        map(actions => {
+          const chatRooms = actions.map(a => {
+            const data = a.payload.doc.data() as any;
+            const id = a.payload.doc.id;
+            return { id, ...data };
+          });
+          console.log('Chat rooms:', chatRooms); // Log the retrieved chat rooms
+          return chatRooms;
+        })
+      );
+  }
+
+  getOtherIdsFromChatRooms(chatRooms: any[], currentUserUid: string): string[] {
+    const otherIds = chatRooms
+      .map(chatRoom => chatRoom.members.find((member: string) => member !== currentUserUid))
+      .filter(id => id !== undefined); // Ensure no undefined IDs are included
+
+    // Remove duplicates
+    const uniqueOtherIds = Array.from(new Set(otherIds));
+
+    console.log('Other IDs:', uniqueOtherIds); // Log the extracted other IDs
+    // console.log('test')
+    return uniqueOtherIds;
+  }
+
+  getUsersByIds(otherIds: string[]): Observable<any[]> {
+    if (otherIds.length === 0) {
+      console.log('No other IDs found'); // Log if no other IDs
+      return of([]); // Return an empty array if no otherIds
+    }
+
+    const usersCollection = this.firestore.collection('users', ref => ref.where('uid', 'in', otherIds));
+    return usersCollection.snapshotChanges().pipe(
+      map(actions => {
+        const users = actions.map(a => {
+          const data = a.payload.doc.data() as any;
+          const id = a.payload.doc.id;
+          return { id, ...data };
+        });
+        console.log('Users:', users); // Log the retrieved users
+       // console.log('user test')
+        return users;
+      })
+    );
+  }
+
+  getOtherUsersInChatRooms(currentUserUid: string): Observable<any[]> {
+    return this.getChatRoomsByUser(currentUserUid).pipe(
+      map(chatRooms => this.getOtherIdsFromChatRooms(chatRooms, currentUserUid)),
+      switchMap(otherIds => this.getUsersByIds(otherIds))
+    );
+  }
 }
+

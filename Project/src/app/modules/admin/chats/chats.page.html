@@ -11,27 +11,28 @@
   </ion-toolbar>
 
   
-  <ion-list *ngIf="(chatRooms ) as rooms">
+  <ion-list *ngIf="chatRooms as rooms">
     <ion-list-header class="ion-padding-bottom">
       RECENT CHATS
     </ion-list-header>
     <ion-item *ngFor="let item of rooms" (click)="getChat(item)" [detail]="true">
-      <ng-container *ngIf="item?.user | async as user">
-      <ion-avatar slot="start">
-      <img [src]="getUser(user)?.photo" />
-      </ion-avatar>
-      <ion-label>
-                  {{getUser(user)?.name}}
-      <p>
-      <ion-text>
-                          message
-      </ion-text>
-      </p>
-      </ion-label>
-      <!-- <ion-text slot="end" color="medium">10:00 AM</ion-text> -->
+      <ng-container *ngIf="item">
+        <ion-avatar slot="start">
+          <img [src]="item.profilePicture" />
+        </ion-avatar>
+        <ion-label>
+          {{ item.displayName }}
+          <p>
+            <ion-text>
+              message
+            </ion-text>
+          </p>
+        </ion-label>
       </ng-container>
-      </ion-item>
+    </ion-item>
   </ion-list>
+  
+  
   
 
   <ion-fab slot="fixed" horizontal="end" vertical="bottom">

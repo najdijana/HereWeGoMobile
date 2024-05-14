@@ -1,19 +1,64 @@
 import { Injectable } from '@angular/core';
-import { user } from '@angular/fire/auth';
-import { collection, orderBy, query, where } from 'firebase/firestore';
-import { Observable, map, of, switchMap } from 'rxjs';
-import { User } from 'src/app/shared/models/user.interface';
-import { ApiService } from 'src/app/shared/services/api.service';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { BehaviorSubject, Observable, catchError, forkJoin, from, map, of, switchMap, take, tap } from 'rxjs';
 import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ChatService {
-    constructor(public auth: AuthService, private api: ApiService) { }
-    currentUserId: string;
-
-   
+    private chatRoomsSubject = new BehaviorSubject<any[]>([]);
+    private isLoading = false;
+    chatRooms$ = this.chatRoomsSubject.asObservable();
+  
+    constructor(private firestore: AngularFirestore) {}
+  
+    loadChatRoomsAndUsers(uid: string): void {
+      if (this.isLoading) {
+        return;
+      }
+  
+      this.isLoading = true;
+  
+      this.firestore.collection('chatRooms', ref => ref.where('members', 'array-contains', uid)).snapshotChanges().pipe(
+        take(1),  // Ensure the observable completes after the first emission
+        tap(chatRooms => {
+          console.log('Chat Rooms:', chatRooms);
+        }),
+        switchMap(chatRooms => {
+          const otherIds = chatRooms.map(a => {
+            const data = a.payload.doc.data() as any;
+            return data.members.find(member => member !== uid);
+          });
+  
+          console.log('Other IDs:', otherIds);
+  
+          const uniqueOtherIds = Array.from(new Set(otherIds));
+  
+          const userRequests = uniqueOtherIds.map(otherId => {
+            console.log('Current Other ID:', otherId);
+            return this.firestore.collection('users', ref => ref.where('uid', '==', otherId)).valueChanges().pipe(
+              take(1),  // Ensure the observable completes after the first emission
+              tap(user => {
+                console.log('Fetched User for otherId', otherId, ':', user);
+              })
+            );
+          });
+  
+          return forkJoin(userRequests);
+        }),
+        map(users => {
+          console.log('Users:', users);
+          return [].concat(...users);
+        })
+      ).subscribe(users => {
+        this.chatRoomsSubject.next(users);
+        this.isLoading = false;
+      }, error => {
+        console.error('Error fetching chat rooms and users:', error);
+        this.isLoading = false;
+      });
+    }
     /*
     async createChatRooms(user_id) {
         try {
@@ -70,4 +115,8 @@ export class ChatService {
             );
         }
         */
+
+
+       
+                    
 }
