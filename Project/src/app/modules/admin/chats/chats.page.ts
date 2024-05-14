@@ -24,6 +24,10 @@ export class ChatsPage implements OnInit , OnDestroy{
   chatRooms: any;
   otherUsers: any[];
 
+  filteredUsers: User[] = [];
+  searchQuery: string = '';
+
+
   constructor(
     private router: Router,
     private userService: UserService,
@@ -61,7 +65,14 @@ export class ChatsPage implements OnInit , OnDestroy{
     this.chatService.unsubscribe();
   }
 
-
+  filterUsers() {
+    const query = this.searchQuery.toLowerCase();
+    if (!query) {
+      this.filteredUsers = this.users;
+    } else {
+      this.filteredUsers = this.users.filter(user => user.displayName.toLowerCase().includes(query));
+    }
+  }
   getUsers() {
     this.userService.collection((ref) =>
       ref.where('uid', '!=', this.uid)
@@ -222,5 +233,7 @@ export class ChatsPage implements OnInit , OnDestroy{
       switchMap(otherIds => this.getUsersByIds(otherIds))
     );
   }
+
+
 }
 
