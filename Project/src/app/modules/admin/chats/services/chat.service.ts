@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { BehaviorSubject, Observable, catchError, forkJoin, from, map, of, switchMap, take, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, catchError, combineLatest, debounceTime, forkJoin, from, map, of, switchMap, take, takeUntil, tap } from 'rxjs';
+import { User } from 'src/app/shared/models/user.interface';
 import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ChatService {
-    private chatRoomsSubject = new BehaviorSubject<any[]>([]);
+    private chatRoomsSubject = new BehaviorSubject<User[]>([]);
     private isLoading = false;
+    private unsubscribeAll = new Subject<void>();
     chatRooms$ = this.chatRoomsSubject.asObservable();
   
     constructor(private firestore: AngularFirestore) {}
@@ -20,12 +22,17 @@ export class ChatService {
   
       this.isLoading = true;
   
-      this.firestore.collection('chatRooms', ref => ref.where('members', 'array-contains', uid)).snapshotChanges().pipe(
-        take(1),  // Ensure the observable completes after the first emission
-        tap(chatRooms => {
-          console.log('Chat Rooms:', chatRooms);
+      combineLatest([
+        this.firestore.collection('chatRooms', ref => ref.where('members', 'array-contains', uid)).snapshotChanges()
+        // Add other observables here if needed
+      ]).pipe(
+        takeUntil(this.unsubscribeAll),
+        debounceTime(250),
+        tap(() => {
+          console.log('loading ...');
+          this.isLoading = true;
         }),
-        switchMap(chatRooms => {
+        switchMap(([chatRooms]) => {
           const otherIds = chatRooms.map(a => {
             const data = a.payload.doc.data() as any;
             return data.members.find(member => member !== uid);
@@ -39,17 +46,18 @@ export class ChatService {
             console.log('Current Other ID:', otherId);
             return this.firestore.collection('users', ref => ref.where('uid', '==', otherId)).valueChanges().pipe(
               take(1),  // Ensure the observable completes after the first emission
+              map((users: User[]) => users[0]), // Assuming there's only one document per uid
               tap(user => {
                 console.log('Fetched User for otherId', otherId, ':', user);
               })
             );
           });
   
-          return forkJoin(userRequests);
+          return forkJoin(userRequests) as Observable<User[]>;
         }),
-        map(users => {
+        map((users: User[]) => {
           console.log('Users:', users);
-          return [].concat(...users);
+          return users;
         })
       ).subscribe(users => {
         this.chatRoomsSubject.next(users);
@@ -58,6 +66,12 @@ export class ChatService {
         console.error('Error fetching chat rooms and users:', error);
         this.isLoading = false;
       });
+    }
+  
+    // Don't forget to call this method in your component's OnDestroy lifecycle hook
+    unsubscribe(): void {
+      this.unsubscribeAll.next();
+      this.unsubscribeAll.complete();
     }
     /*
     async createChatRooms(user_id) {

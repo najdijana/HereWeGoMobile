@@ -43,10 +43,6 @@ export class ChatsPage implements OnInit , OnDestroy{
 
   unsubscribeAll: Subject<any> = new Subject<any>();
 
-  ngOnDestroy(): void {
-    this.unsubscribeAll.next(null);     
-    this.unsubscribeAll.complete();
-  }
 
 
 
@@ -55,13 +51,17 @@ export class ChatsPage implements OnInit , OnDestroy{
 
     this.chatService.chatRooms$.subscribe(users => {
       console.log(users);
-      // Ensure users are mapped correctly to chatRooms
       this.chatRooms = users.map(user => ({
         profilePicture: user.profilePicture,
         displayName: user.displayName
       }));
     });
   }
+
+  ngOnDestroy(): void {
+    this.chatService.unsubscribe();
+  }
+
   
   getUsers() {
     this.userService.collection((ref) =>
