@@ -1,0 +1,162 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Favorites</ion-title>
+    <!-- Add filter icon button -->
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <!-- [(ngModel)]="searchQuery" (ionChange)="filterDestinations()" -->
+  <ion-searchbar (ionInput)="filterFavorites($event)" placeholder="Search in favorites"></ion-searchbar>
+  <ion-list>
+ <!-- <ion-reorder-group [disabled]="false" (ionItemReorder)="handleReorder($any($event))"> -->
+  <ng-container *ngFor="let item of (filteredFavorites$ | async)">
+    <!-- Render accommodations -->
+    <ng-container *ngIf="item.type === 'TopDestinations'">
+      <ion-card class="max-w-sm mx-3 bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="relative">
+          <img [src]="item.Image" alt="{{ item.Name }}" class="w-full h-56 object-cover">
+          <ion-button
+            (click)="toggleFavorite(item)"
+            color="danger"
+            class="absolute top-4 right-4 p-0"> 
+            <ion-icon name="trash-outline" class="text-red-200"></ion-icon>
+            <!-- Remove -->
+          </ion-button>
+        </div>
+        <div class="p-4 space-y-1">
+          <h2 class="text-lg font-semibold text-gray-900">{{ item.Name }}</h2>
+          <p class="text-sm text-gray-500"><ion-icon name="location-outline"></ion-icon> {{ item.City }}</p>
+          <p class="text-sm text-gray-500"><ion-icon name="walk-outline"></ion-icon> Activities: {{ item.Activity }}</p>
+          
+          <!-- Phone and Opening Hours -->
+          <p class="text-sm text-gray-500"><ion-icon name="phone-portrait-outline"></ion-icon> {{ item.Phone }}</p>
+          <p class="text-sm text-gray-500"><ion-icon name="time-outline"></ion-icon> {{ item.OpenningHours }}</p>
+    
+          <div class="flex justify-between items-center">
+            <span class="text-lg font-bold text-gray-900">${{ item.Price }}</span>
+            <!-- <span class="text-sm text-gray-500">Reviews: {{ destination.Reviews }}</span> -->
+          </div>
+        </div>
+      </ion-card>
+    </ng-container>
+
+  <ng-container *ngIf="item.type === 'Restaurants'">
+    <ion-card  class="max-w-sm mx-3 bg-white rounded-xl shadow-md overflow-hidden">
+      <div class="relative">
+          <img [src]="item.Image" alt="{{ item.Name }}" class="w-full h-56 object-cover">
+          <ion-button
+          (click)="toggleFavorite(item)"
+          color="danger"
+          class="absolute top-4 right-4"> 
+          Remove
+        </ion-button>
+      </div>
+      <div class="p-4 space-y-1">
+          <h2 class="text-lg font-semibold text-gray-900 flex justify-between items-center">
+              {{ item.Name }}
+              <a [href]="item.Link" target="_blank">
+                  <ion-icon name="link-outline" class="text-gray-900 text-xl"></ion-icon>
+              </a>
+          </h2>
+          <p class="text-sm text-gray-500"><ion-icon class="mr-1" name="location-outline"></ion-icon>{{ item.City }}, {{ item.District }}</p>
+          <p class="text-sm text-gray-500"><ion-icon class="mr-1" name="restaurant-outline"></ion-icon>Cuisines: {{ item.Cuisine.join(', ') }}</p>
+          <p class="text-sm text-gray-500"><ion-icon class="mr-1" name="fast-food-outline"></ion-icon>Meals: {{ item.Meals.join(', ') }}</p>
+          <div class="flex justify-between items-center">
+              <span class="text-lg font-bold text-gray-900">{{ item.Price_range }}</span>
+              <span class="text-sm text-gray-500">{{ item.Type }}</span>
+          </div>
+      </div>
+  </ion-card>
+  </ng-container>
+
+  <ng-container  *ngIf="item.type === 'Accomodation'">
+    <!-- <ion-reorder> -->
+    <ion-card class="max-w-sm mx-3 bg-white rounded-xl shadow-md overflow-hidden">
+      <div class="relative">
+          <img [src]="item.Image" alt="{{ item.Name }}" class="w-full h-56 object-cover">
+          <ion-button
+          (click)="toggleFavorite(item)"
+          color="danger"
+          class="absolute top-4 right-4"> 
+          Remove
+        </ion-button>   </div> 
+      <div class="p-4 space-y-1">
+          <h2 class="text-lg font-semibold text-gray-900">{{ item.Name }}</h2>
+          <p class="text-sm text-gray-500"><ion-icon name="location-outline"></ion-icon>{{ item.City }}, {{ item.District }}</p>
+          <p class="text-sm text-gray-500"><ion-icon name="accessibility-outline"></ion-icon>Guests: {{ item.Nb_guests }}, Bedrooms: {{ item.Nb_bedrooms }}</p>
+          <p class="text-sm text-gray-500">Amenities: {{ item.Wifi ? 'WiFi, ' : '' }}{{ item.Pets ? 'Pets Allowed, ' : '' }}{{ item.Parking ? 'Parking' : '' }}</p>
+          <div class="flex justify-between items-center">
+              <span class="text-lg font-bold text-gray-900">${{ item.Price }}</span>
+              <ion-button fill="clear" href="{{ item.Link }}" target="_blank">
+                  <ion-icon slot="start" name="link-outline"></ion-icon>
+                  More Info
+              </ion-button>
+          </div>
+      </div>
+  </ion-card>
+    <!-- </ion-reorder> -->
+  </ng-container>
+
+  <ng-container  *ngIf="item.type === 'Activities'">
+    <ion-card  class="max-w-sm mx-3 bg-white rounded-xl shadow-md overflow-hidden">
+      <div class="relative">
+        <img [src]="item.Image" alt="{{ item.Activity }}" class="w-full h-56 object-cover">
+        <ion-button
+        (click)="toggleFavorite(item)"
+        color="danger"
+        class="absolute top-4 right-4"> 
+        Remove
+      </ion-button>      </div>
+      <div class="p-4 space-y-1">
+        <h2 class="text-lg font-semibold text-gray-900">{{ item.Activity }}</h2>
+        <p class="text-sm text-gray-500"><ion-icon name="map-outline"></ion-icon> {{ item.Place }}</p>
+        <p class="text-sm text-gray-500"><ion-icon name="pin-outline"></ion-icon> {{ item.City }}, {{ item.District }}</p>
+        <p class="text-sm text-gray-500"><ion-icon name="time-outline"></ion-icon> {{ item.Session_Duration }} hours</p>
+        <p class="text-sm text-gray-500"><ion-icon name="cash-outline"></ion-icon> {{ item.Price }}</p>
+        <div class="flex justify-between items-center">
+          <ion-button fill="clear" href="{{ item.Link }}" target="_blank">
+            <ion-icon slot="start" name="link-outline"></ion-icon>
+            More Info
+          </ion-button>
+          <!-- Additional UI elements can be added here -->
+        </div>
+      </div>
+    </ion-card>
+  </ng-container>
+
+  <ng-container  *ngIf="item.type === 'Transportation'">
+
+    <ion-card class="max-w-sm mx-3 bg-white rounded-xl shadow-md overflow-hidden">
+      <div class="relative">
+          <img [src]="item.Image" alt="{{ item.Name }}" class="w-full h-56 object-cover">
+          <ion-button
+          (click)="toggleFavorite(item)"
+          color="danger"
+          class="absolute top-4 right-4"> 
+          Remove
+        </ion-button>    </div>
+      <div class="p-4 space-y-1">
+          <h2 class="text-lg font-semibold text-gray-900">{{ item.Name }}</h2>
+          <p class="text-sm text-gray-500"><ion-icon class="mr-1" name="phone-portrait-outline"></ion-icon>Contact: {{ item.Contact }}</p>
+          <div class="flex justify-between items-center">
+              <span class="text-lg font-bold text-gray-900">{{ item.Price }}</span>
+              <ion-button fill="clear" href="{{ item.Link }}" target="_blank">
+                  <ion-icon slot="start" name="link-outline"></ion-icon>
+                  More Info
+              </ion-button>
+              <span class="text-sm text-gray-500" *ngIf="item.Public">Public</span>
+              <span class="text-sm text-gray-500" *ngIf="!item.Public">Private</span>
+          </div>
+      </div>
+  </ion-card>
+  </ng-container>
+
+  </ng-container>
+
+<!-- </ion-reorder-group> -->
+  </ion-list>
+
+</ion-content>
