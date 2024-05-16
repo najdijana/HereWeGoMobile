@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TopDestinationService } from '../top-destinations/destinations/service/topdestination.service';
 import { Observable } from 'rxjs';
-import { TopDest } from 'src/app/shared/models/topdest.interface';
+import { TopDest, destination } from 'src/app/shared/models/topdest.interface';
 import { PopoverController } from '@ionic/angular';
 import { FilterDestinationsComponent } from './filter-destinations/filter-destinations.component';
 
@@ -24,17 +24,33 @@ export class TopdestinationsLebPage implements OnInit {
   minPrice: number;
   maxPrice: number;
   activity: string;
+  favoriteStatus: {[key: string]: boolean} = {};
 
   constructor(private topDestinationService: TopDestinationService, private popoverController: PopoverController) {}
 
   ngOnInit() {
-    this.topDestinationService.collection().valueChanges().subscribe(data => {
+    this.topDestinationService.collection().valueChanges({ idField: 'id' }).subscribe(data => {
       this.topDestinations = data;
       this.allDestinations = data;
       this.filteredDestinations = data;
+      data.forEach((destination: TopDest) => {
+        this.favoriteStatus[destination.id] = destination.isFavorite || false;
+      });
       this.updatePagedDestinations(0);
     });
   }
+
+
+  toggleFavorite(destination: TopDest) {
+    const isCurrentlyFavorite = this.favoriteStatus[destination.id] || false;
+    this.favoriteStatus[destination.id] = !isCurrentlyFavorite;
+    console.log("Selected Destination:", destination);
+    console.log("Favorite Status:", this.favoriteStatus[destination.id]);
+
+    const ref = this.topDestinationService.doc(destination.id);
+    return ref.update({ isFavorite: this.favoriteStatus[destination.id] });
+  }
+
 
   updatePagedDestinations(pageIndex: number) {
     const startIndex = pageIndex * this.pageSize;

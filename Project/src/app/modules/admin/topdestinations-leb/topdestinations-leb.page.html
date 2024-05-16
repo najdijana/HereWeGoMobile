@@ -1,9 +1,13 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
     <ion-title>Top Destinations</ion-title>
+    <!-- Add filter icon button -->
     <ion-buttons slot="end">
       <ion-button (click)="presentFilterPopover($event)">
-        <ion-icon slot="icon-only" name="funnel-outline"></ion-icon>
+        <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -26,7 +30,13 @@
   <ion-card *ngFor="let destination of filteredDestinations" class="max-w-sm mx-3 bg-white rounded-xl shadow-md overflow-hidden">
     <div class="relative">
       <img [src]="destination.Image" alt="{{ destination.Name }}" class="w-full h-56 object-cover">
-      <ion-icon name="heart-outline" class="absolute top-4 right-4 text-white text-3xl"></ion-icon>
+      <!-- <ion-icon name="heart-outline" class="absolute top-4 right-4 text-white text-3xl"></ion-icon> -->
+      <ion-icon 
+        name="heart" 
+        class="absolute top-4 right-4 text-3xl"
+        [ngClass]="{'text-red-500': favoriteStatus[destination.id], 'text-green-500': !favoriteStatus[destination.id]}"
+        (click)="toggleFavorite(destination)">
+      </ion-icon>
     </div>
     <div class="p-4 space-y-1">
       <h2 class="text-lg font-semibold text-gray-900">{{ destination.Name }}</h2>
