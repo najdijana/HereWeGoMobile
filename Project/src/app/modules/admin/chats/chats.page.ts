@@ -32,9 +32,6 @@ export class ChatsPage implements OnInit , OnDestroy{
     private router: Router,
     private userService: UserService,
     private firestore: AngularFirestore,
-    // private api : ApiService,
-     
-    //private Afirestore: Firestore,
      private chatService : ChatService
 
   ) {

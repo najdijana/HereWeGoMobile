@@ -62,7 +62,11 @@ const routes: Routes = [
     resolve:{
       userDataResolver:UserDataResolver
   },
+  },  {
+    path: 'guider-detail',
+    loadChildren: () => import('./modules/guider-detail/guider-detail.module').then( m => m.GuiderDetailPageModule)
   },
+
 
 
 ];

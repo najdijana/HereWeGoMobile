@@ -8,6 +8,8 @@ import { FolderPageRoutingModule } from './folder-routing.module';
 
 import { FolderPage } from './folder.page';
 import { ServicesComponent } from './services/services.component';
+import { ChatbotComponent } from './chatbot/chatbot.component';
+import { ComponentsModule } from '../modules/admin/chats/components.module';
 
 @NgModule({
   imports: [
@@ -15,9 +17,9 @@ import { ServicesComponent } from './services/services.component';
     FormsModule,
     IonicModule,
     FolderPageRoutingModule,
-    
-  
+    //ChatbotComponent,
+    ComponentsModule
   ],
-  declarations: [FolderPage, ServicesComponent]
+  declarations: [FolderPage, ServicesComponent, ChatbotComponent]
 })
 export class FolderPageModule {}
