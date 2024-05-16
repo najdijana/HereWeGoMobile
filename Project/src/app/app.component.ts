@@ -10,7 +10,7 @@ export class AppComponent implements OnInit {
     { title: 'All Destinations', url: '/topdestinations-leb', icon: 'mail' },
     { title: 'Destinations', url: '/top-destinations', icon: 'paper-plane' },
     { title: 'Packages', url: '/packages', icon: 'heart' },
-    { title: 'Archived', url: '/folder/archived', icon: 'archive' },
+    { title: 'favorites', url: '/favorites', icon: 'archive' },
     { title: 'Trash', url: '/folder/trash', icon: 'trash' },
     { title: 'Spam', url: '/folder/spam', icon: 'warning' },
   ];
