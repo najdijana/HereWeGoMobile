@@ -9,5 +9,5 @@ export interface Restaurants{
     Cuisine: string [];
     Type: string;
     Image: string;
-
+    isFavorite?:boolean;
 }

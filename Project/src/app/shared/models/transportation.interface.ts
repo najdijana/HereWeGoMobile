@@ -6,4 +6,6 @@ export interface Transportation{
     Image: string;
     Price: string;
     Link: string;
+    isFavorite?:boolean;
+
 }

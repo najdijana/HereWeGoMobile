@@ -9,6 +9,7 @@ export interface TopDest{
     Phone: string;
     Governate: string;
     review?:number;
+    isFavorite?:boolean;
 }
 
 export interface destination{

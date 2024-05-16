@@ -9,5 +9,6 @@ export interface Activities{
     Type: string;
     Activity: string;
     Image: string;
+    isFavorite?:boolean;
 
 }

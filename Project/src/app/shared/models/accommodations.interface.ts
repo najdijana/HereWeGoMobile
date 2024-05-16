@@ -11,5 +11,5 @@ export interface Accommodations{
     Wifi: boolean;
     Parking: boolean;
     Price: number;
-
+    isFavorite?:boolean;
 }
