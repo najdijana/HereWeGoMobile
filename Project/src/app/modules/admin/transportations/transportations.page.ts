@@ -16,6 +16,8 @@ export class TransportationsPage implements OnInit {
   pagedPackages: Transportation[] = [];
   pageSize: number = 6;
   totalPages: number;
+  favoriteStatus: {[key: string]: boolean} = {};
+
   constructor(private transportationService: TransportationService) {}
 
   ngOnInit() {
@@ -23,8 +25,21 @@ export class TransportationsPage implements OnInit {
       this.transportations = data;
       this.allTransportations = data;
       this.filteredTransportations = data;
+      data.forEach((destination: Transportation) => {
+        this.favoriteStatus[destination.id] = destination.isFavorite || false;
+      });
       this.updatePagedPackages(0);
     });
+  }
+
+  toggleFavorite(destination: Transportation) {
+    const isCurrentlyFavorite = this.favoriteStatus[destination.id] || false;
+    this.favoriteStatus[destination.id] = !isCurrentlyFavorite;
+    console.log("Selected Destination:", destination);
+    console.log("Favorite Status:", this.favoriteStatus[destination.id]);
+
+    const ref = this.transportationService.doc(destination.id);
+    return ref.update({ isFavorite: this.favoriteStatus[destination.id] });
   }
 
    // Other methods remain the same
