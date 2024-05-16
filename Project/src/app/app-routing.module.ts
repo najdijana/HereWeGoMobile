@@ -71,6 +71,10 @@ const routes: Routes = [
     path: 'chats',
     loadChildren: () => import('./modules/admin/chats/chats.module').then( m => m.ChatsPageModule)
   },
+  {
+    path: 'favorites',
+    loadChildren: () => import('./modules/admin/favorites/favorites.module').then( m => m.FavoritesPageModule)
+  },
 
 
 
