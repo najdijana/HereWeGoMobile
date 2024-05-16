@@ -51,7 +51,8 @@ const routes: Routes = [
   {
     path: 'packages',
     loadChildren: () => import('./modules/admin/packages/packages.module').then( m => m.PackagesPageModule)
-  },  {
+  },
+  {
     path: 'restaurants',
     loadChildren: () => import('./modules/admin/restaurants/restaurants.module').then( m => m.RestaurantsPageModule)
   },
@@ -69,7 +70,14 @@ const routes: Routes = [
   },
   {
     path: 'chats',
-    loadChildren: () => import('./modules/admin/chats/chats.module').then( m => m.ChatsPageModule)
+    loadChildren: () => import('./modules/admin/chats/chats.module').then( m => m.ChatsPageModule),
+    resolve:{
+      userDataResolver:UserDataResolver
+  },
+  },
+  {
+    path: 'guider-detail',
+    loadChildren: () => import('./modules/guider-detail/guider-detail.module').then( m => m.GuiderDetailPageModule)
   },
   {
     path: 'favorites',

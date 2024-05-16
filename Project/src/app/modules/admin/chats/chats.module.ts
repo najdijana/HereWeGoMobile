@@ -9,6 +9,8 @@ import { ChatsPageRoutingModule } from './chats-routing.module';
 import { ChatsPage } from './chats.page';
 import { UserListComponent } from './user-list/user-list.component';
 import { ChatService } from './services/chat.service';
+import { FirestoreModule } from '@angular/fire/firestore';
+import { ComponentsModule } from './components.module';
 
 @NgModule({
   imports: [
@@ -16,9 +18,10 @@ import { ChatService } from './services/chat.service';
     FormsModule,
     IonicModule,
     ChatsPageRoutingModule,
+    FirestoreModule,
     
   ],
   declarations: [ChatsPage, UserListComponent],
-  providers: [ChatService]
+ 
 })
 export class ChatsPageModule {}

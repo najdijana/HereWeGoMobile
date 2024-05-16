@@ -1,0 +1,147 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Guider Profile Section -->
+  <ion-card>
+    <ion-card-content>
+      <ion-item>
+        <!-- Profile Image -->
+        <ion-avatar slot="start">
+          <img src="assets/img/avatar.jpg" alt="Profile Image">
+        </ion-avatar>
+        <!-- Centered Texts Beside the Image -->
+        <ion-label>
+          <h2>Lucia Duffy</h2>
+          <p>15 Reviews</p>
+          <p>Member since June 2021</p>
+        </ion-label>
+      </ion-item>
+      <!-- Verifications Section -->
+      <ion-grid>
+        <ion-row>
+          <ion-col size="auto">
+            <ion-icon name="call" color="primary"></ion-icon>
+            <ion-label>+961 70 595 333</ion-label>
+          </ion-col>
+          <ion-col size="auto">
+            <ion-icon name="mail" color="primary"></ion-icon>
+            <ion-label>Lucia&#64;gmail.com</ion-label>
+          </ion-col>
+          <ion-col size="auto">
+            <ion-icon name="document" color="primary"></ion-icon>
+            <ion-label>Travel Certificate</ion-label>
+          </ion-col>
+          <ion-col size="auto">
+            <ion-icon name="globe" color="primary"></ion-icon>
+            <ion-label>Social Media</ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Activity Section -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Activity</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <!-- Card 1 -->
+          <ion-col size="12" size-sm="6">
+            <ion-card>
+              <img src="https://via.placeholder.com/400x200" alt="Faraya Ski" />
+              <ion-card-content>
+                <ion-card-title>Faraya Ski</ion-card-title>
+                <ion-text>Faraya, Lebanon</ion-text>
+                <ion-text>
+                  <ion-icon name="star" color="warning"></ion-icon>
+                  <ion-icon name="star" color="warning"></ion-icon>
+                  <ion-icon name="star" color="warning"></ion-icon>
+                  <ion-icon name="star" color="warning"></ion-icon>
+                  <ion-icon name="star-half" color="warning"></ion-icon>
+                  (10 Reviews)
+                </ion-text>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col>2 days</ion-col>
+                    <ion-col>$200.00</ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+          <!-- Card 2 -->
+          <ion-col size="12" size-sm="6">
+            <ion-card>
+              <img src="https://via.placeholder.com/400x200" alt="Chouf Hiking" />
+              <ion-card-content>
+                <ion-card-title>Chouf Hiking</ion-card-title>
+                <ion-text>Chouf, Lebanon</ion-text>
+                <ion-text>No Review</ion-text>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col>10 hours</ion-col>
+                    <ion-col>$15.00</ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Reviews Section -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Reviews</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <!-- Review 1 -->
+      <ion-item>
+        <ion-avatar slot="start">
+          <img src="assets/img/avatar.jpg" alt="Profile Image">
+        </ion-avatar>
+        <ion-label>
+          <h2>Lucia Duffy</h2>
+          <p>Overall, Batroun is a fantastic destination for a relaxing and culturally rich vacation. The combination of history, natural beauty, and welcoming locals made this trip an unforgettable experience. I can't wait to return to Batroun in the future.</p>
+          <ion-text>
+            <ion-icon name="star" color="warning"></ion-icon>
+            <ion-icon name="star" color="warning"></ion-icon>
+            <ion-icon name="star" color="warning"></ion-icon>
+            <ion-icon name="star" color="warning"></ion-icon>
+            <ion-icon name="star-half" color="warning"></ion-icon>
+            (77 likes)
+          </ion-text>
+        </ion-label>
+      </ion-item>
+      <!-- Review 2 -->
+      <ion-item>
+        <ion-avatar slot="start">
+          <img src="assets/img/avatar.jpg" alt="Profile Image">
+        </ion-avatar>
+        <ion-label>
+          <h2>Bryan Meyer</h2>
+          <p>Overall, Batroun is a fantastic destination for a relaxing and culturally rich vacation. The combination of history, natural beauty, and welcoming locals made this trip an unforgettable experience. I can't wait to return to Batroun in the future.</p>
+          <ion-text>
+            <ion-icon name="star" color="warning"></ion-icon>
+            <ion-icon name="star" color="warning"></ion-icon>
+            <ion-icon name="star" color="warning"></ion-icon>
+            <ion-icon name="star" color="warning"></ion-icon>
+            <ion-icon name="star-half" color="warning"></ion-icon>
+            (77 likes)
+          </ion-text>
+        </ion-label>
+      </ion-item>
+      <!-- Add Review Button -->
+      <ion-button expand="full" color="primary" (click)="addReview()">Add A Review</ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
