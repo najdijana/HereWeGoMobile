@@ -31,12 +31,20 @@
   <ion-card *ngFor="let restaurant of filteredRestaurants" class="max-w-sm mx-3 bg-white rounded-xl shadow-md overflow-hidden">
     <div class="relative">
         <img [src]="restaurant.Image" alt="{{ restaurant.Name }}" class="w-full h-56 object-cover">
-        <a [href]="restaurant.Link" target="_blank" class="absolute top-4 right-4">
-            <ion-icon name="link-outline" class="text-white text-3xl shadow-2xl"></ion-icon>
-        </a>
+        <ion-icon 
+        name="heart" 
+        class="absolute top-4 right-4 text-3xl"
+        [ngClass]="{'text-red-500': favoriteStatus[restaurant.id], 'text-green-500': !favoriteStatus[restaurant.id]}"
+        (click)="toggleFavorite(restaurant)">
+      </ion-icon>
     </div>
     <div class="p-4 space-y-1">
-        <h2 class="text-lg font-semibold text-gray-900">{{ restaurant.Name }}</h2>
+        <h2 class="text-lg font-semibold text-gray-900 flex justify-between items-center">
+            {{ restaurant.Name }}
+            <a [href]="restaurant.Link" target="_blank">
+                <ion-icon name="link-outline" class="text-gray-900 text-xl"></ion-icon>
+            </a>
+        </h2>
         <p class="text-sm text-gray-500"><ion-icon class="mr-1" name="location-outline"></ion-icon>{{ restaurant.City }}, {{ restaurant.District }}</p>
         <p class="text-sm text-gray-500"><ion-icon class="mr-1" name="restaurant-outline"></ion-icon>Cuisines: {{ restaurant.Cuisine.join(', ') }}</p>
         <p class="text-sm text-gray-500"><ion-icon class="mr-1" name="fast-food-outline"></ion-icon>Meals: {{ restaurant.Meals.join(', ') }}</p>
@@ -46,6 +54,7 @@
         </div>
     </div>
 </ion-card>
+
 
 
   <ion-infinite-scroll threshold="100px" (ionInfinite)="loadMore($event)">

@@ -18,6 +18,7 @@ export class RestaurantsPage  implements OnInit {
   pagedPackages: Restaurants[] = [];
   pageSize: number = 6;
   totalPages: number;
+  favoriteStatus: {[key: string]: boolean} = {};
   constructor(private restaurantsService: RestaurantsService,private popoverController: PopoverController) {}
 
   ngOnInit() {
@@ -25,8 +26,21 @@ export class RestaurantsPage  implements OnInit {
       this.restaurants = data;
       this.allRestaurants = data;
       this.filteredRestaurants = data;
+      data.forEach((destination: Restaurants) => {
+        this.favoriteStatus[destination.id] = destination.isFavorite || false;
+      });
       this.updatePagedPackages(0);
     });
+  }
+
+  toggleFavorite(destination: Restaurants) {
+    const isCurrentlyFavorite = this.favoriteStatus[destination.id] || false;
+    this.favoriteStatus[destination.id] = !isCurrentlyFavorite;
+    console.log("Selected Restaurants:", destination);
+    console.log("Favorite Status:", this.favoriteStatus[destination.id]);
+
+    const ref = this.restaurantsService.doc(destination.id);
+    return ref.update({ isFavorite: this.favoriteStatus[destination.id] });
   }
 
    // Other methods remain the same
