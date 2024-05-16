@@ -22,6 +22,7 @@ export class ActivitiesPage implements OnInit {
   locationFilter?: string;
   selectedSortOption: string = 'sort by'; // Default sort option
   totalPages: number;
+  favoriteStatus: {[key: string]: boolean} = {};
 
   constructor(private activitiesService: ActivitiesService, private popoverController: PopoverController) {}
 
@@ -36,8 +37,21 @@ export class ActivitiesPage implements OnInit {
       this.activities = activities;
       this.allActivities = activities;
       this.filteredActivities = activities;
+      activities.forEach((destination: Activities) => {
+        this.favoriteStatus[destination.id] = destination.isFavorite || false;
+      });
       this.updatePagedActivities(0);
     });
+  }
+
+  toggleFavorite(destination: Activities) {
+    const isCurrentlyFavorite = this.favoriteStatus[destination.id] || false;
+    this.favoriteStatus[destination.id] = !isCurrentlyFavorite;
+    console.log("Selected Destination:", destination);
+    console.log("Favorite Status:", this.favoriteStatus[destination.id]);
+
+    const ref = this.activitiesService.doc(destination.id);
+    return ref.update({ isFavorite: this.favoriteStatus[destination.id] });
   }
 
   updatePagedActivities(pageIndex: number) {
