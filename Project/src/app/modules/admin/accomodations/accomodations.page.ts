@@ -18,6 +18,7 @@ export class AccomodationsPage implements OnInit {
   pagedPackages: Accommodations[] = [];
   pageSize: number = 6;
   totalPages: number;
+  favoriteStatus: {[key: string]: boolean} = {};
 
   constructor(private accommodationService: AccommodationService,private popoverController:PopoverController) {}
 
@@ -26,8 +27,21 @@ export class AccomodationsPage implements OnInit {
       this.accommodations = data;
       this.allAccommodations = data;
       this.filteredAccommodations = data;
+      data.forEach((destination: Accommodations) => {
+        this.favoriteStatus[destination.id] = destination.isFavorite || false;
+      });
       this.updatePagedPackages(0);
     });
+  }
+
+  toggleFavorite(destination: Accommodations) {
+    const isCurrentlyFavorite = this.favoriteStatus[destination.id] || false;
+    this.favoriteStatus[destination.id] = !isCurrentlyFavorite;
+    console.log("Selected Destination:", destination);
+    console.log("Favorite Status:", this.favoriteStatus[destination.id]);
+
+    const ref = this.accommodationService.doc(destination.id);
+    return ref.update({ isFavorite: this.favoriteStatus[destination.id] });
   }
 
   filterAccommodations() {
