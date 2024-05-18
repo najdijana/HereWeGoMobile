@@ -11,7 +11,7 @@ export interface User{
     isValidCertificate?:boolean;
     guiderCertificateURL?:string;
     guiderCertificateName?:string;
-
+    instaUrl?:string;
 }
 
 export interface Address{
