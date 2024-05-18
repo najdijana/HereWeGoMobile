@@ -3,6 +3,7 @@ import { Packages } from 'src/app/shared/models/packages.interface';
 import { PopoverController } from '@ionic/angular';
 import { FilterPackagesComponent } from './filter-packages/filter-packages.component';
 import { PackageService } from './Services/packages.service';
+import { GuiderService } from '../../guider-detail/guider.service';
 
 @Component({
   selector: 'app-packages',
@@ -26,10 +27,14 @@ export class PackagesPage implements OnInit {
   selectedSortOption: string = 'sort by'; // Default sort option
   totalPages: number;
 
-  constructor(private packageService: PackageService, private popoverController: PopoverController) {}
+  constructor(private packageService: PackageService, private popoverController: PopoverController,private guiderService:GuiderService) {}
 
   ngOnInit() {
     this.getPackages();
+  }
+
+  add(packg:Packages){
+    //this.guiderService.collection().doc("QDl5K7sVdsfxRwQpmJqVJarppmj1").collection('packages').doc(packg.id).set(packg, {merge: true});
   }
 
   getPackages() {
