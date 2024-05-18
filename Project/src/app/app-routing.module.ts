@@ -82,7 +82,11 @@ const routes: Routes = [
   {
     path: 'favorites',
     loadChildren: () => import('./modules/admin/favorites/favorites.module').then( m => m.FavoritesPageModule)
+  },  {
+    path: 'bookings',
+    loadChildren: () => import('./modules/admin/bookings/bookings.module').then( m => m.BookingsPageModule)
   },
+
 
 
 
