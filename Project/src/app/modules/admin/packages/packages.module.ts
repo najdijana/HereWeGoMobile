@@ -7,7 +7,6 @@ import { PackagesPage } from './packages.page';
 import { FilterPackagesComponent } from './filter-packages/filter-packages.component';
 import { PackageResolver } from './resolver/package.resolver';
 import { PackageService } from './Services/packages.service';
-import { GuiderService } from '../../guider-detail/guider.service';
 
 @NgModule({
   imports: [
@@ -22,7 +21,6 @@ import { GuiderService } from '../../guider-detail/guider.service';
   providers: [
     PackageService,
     PackageResolver,
-    GuiderService
   ],
   declarations: [PackagesPage,FilterPackagesComponent],
   
