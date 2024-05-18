@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Payment</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="flex justify-center items-center h-screen ">
+    <div class=" p-6 rounded-lg shadow-2xl w-96">
+      <div class="flex justify-center mb-4">
+        <img src="../../../../../../assets/img/logoNav.png" alt="FireStarter" style="width: 300px; height: 58px;">
+      </div>
+      <h2 class="text-xl font-semibold text-center mb-2">Payment</h2>
+      <p class="text-center text-gray-600 mb-4">Book your selected package</p>
+      <form>
+        <div class="mb-4">
+          <input type="email" placeholder="Email" class="w-full p-2 border rounded-md focus:outline-none focus:border-primary">
+        </div>
+        <div class="mb-4">
+          <input type="text" placeholder="Card number" class="w-full p-2 border rounded-md focus:outline-none focus:border-primary">
+        </div>
+        <div class="flex space-x-2 mb-4">
+          <input type="text" placeholder="MM / YY" class="w-full p-2 border rounded-md focus:outline-none focus:border-primary">
+          <input type="text" placeholder="CVC" class="w-full p-2 border rounded-md focus:outline-none focus:border-primary">
+        </div>
+        <button type="submit" class="w-full bg-primary text-white p-2 rounded-md hover:bg-lime-500">Pay ${{package?.budget}}</button>
+      </form>
+    </div>
+  </div>
+  
+</ion-content>
