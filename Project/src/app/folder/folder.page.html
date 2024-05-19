@@ -16,12 +16,18 @@
 
  <app-services> </app-services>
 
-
+<!--
  <ion-fab slot="fixed" horizontal="end" vertical="bottom">
   <ion-fab-button (click)="openChatbot()">
     <ion-icon name="chatbox" style="color: white;"></ion-icon>
   </ion-fab-button>
 
-</ion-fab>
+</ion-fab>-->
+<df-messenger
+  intent="WELCOME"
+  chat-title="chatbot"
+  agent-id="b1f764c0-760d-4bb5-85f6-53a3561792d8"
+  language-code="en">
+</df-messenger>
 
 </ion-content>
