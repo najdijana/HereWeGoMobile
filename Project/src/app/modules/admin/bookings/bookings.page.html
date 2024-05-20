@@ -1,13 +1,75 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>bookings</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Bookings</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">bookings</ion-title>
+      <ion-title size="large">Bookings</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  <ion-list *ngIf="groupedPayments?.length > 0; else noBookings">
+    <ion-item-group *ngFor="let group of groupedPayments">
+      <ion-item-divider>
+        <ion-label>
+          <ng-container *ngIf="isToday(group.date); else pastOrUpcomingTrip">
+            Departure Today
+          </ng-container>
+          <ng-template #pastOrUpcomingTrip>
+            <ng-container *ngIf="isPastDate(group.date); else upcomingTrip">
+              Trips Completed
+            </ng-container>
+            <ng-template #upcomingTrip>
+              Start Date: {{ group.date | date }}
+            </ng-template>
+          </ng-template>
+        </ion-label>
+      </ion-item-divider>
+      <ion-item *ngFor="let payment of group.payments">
+        <ion-card>
+          <ion-img [src]="payment.package.image"></ion-img>
+          <ion-card-content>
+            <ion-card-title>{{ payment.package.packageName }}</ion-card-title>
+            <ion-row>
+              <ion-col size="6">
+                <p><ion-icon name="map"></ion-icon> {{ payment.package.place }}</p>
+                <p><ion-icon name="calendar"></ion-icon> {{ payment.package.days }} days</p>
+                <p><ion-icon name="cash-outline"></ion-icon> {{ payment.package.budget }}$</p>
+              </ion-col>
+              <ion-col size="6">
+                <p><ion-icon name="person"></ion-icon> {{ payment.package.persons }} Person</p>
+                <p><ion-icon name="star"></ion-icon> {{ payment.package.review }} <small>({{ payment.package.nbreviews }})</small></p>
+              </ion-col>
+            </ion-row>
+            <!-- Read More Button -->
+            <ion-button [routerLink]="'/packages/' + payment.package.id + '/details'" expand="block">Read More</ion-button>
+            <!-- Buttons based on trip status -->
+            <ng-container *ngIf="isToday(group.date); else pastOrUpcomingTripButtons">
+              <ion-button [routerLink]="'/bookings/' + payment.package.id + '/tracking-trip-stepper'" expand="block" color="warning">Track Trip</ion-button>
+            </ng-container>
+            <ng-template #pastOrUpcomingTripButtons>
+              <ng-container *ngIf="isPastDate(group.date); else upcomingTripButtons">
+                <ion-button [routerLink]="'/bookings/' + payment.package.id + '/trip-history'" expand="block" color="success">View History</ion-button>
+              </ng-container>
+              <ng-template #upcomingTripButtons>
+                <ion-button expand="block" color="danger">Cancel Trip</ion-button>
+              </ng-template>
+            </ng-template>
+          </ion-card-content>
+        </ion-card>
+      </ion-item>
+    </ion-item-group>
+  </ion-list>
+
+  <ng-template #noBookings>
+    <div class="no-bookings">
+      <p>There are no bookings</p>
+    </div>
+  </ng-template>
 </ion-content>
