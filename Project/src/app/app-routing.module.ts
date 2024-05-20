@@ -76,10 +76,6 @@ const routes: Routes = [
   },
   },
   {
-    path: 'guider-detail',
-    loadChildren: () => import('./modules/guider-detail/guider-detail.module').then( m => m.GuiderDetailPageModule)
-  },
-  {
     path: 'favorites',
     loadChildren: () => import('./modules/admin/favorites/favorites.module').then( m => m.FavoritesPageModule)
   },
@@ -89,6 +85,10 @@ const routes: Routes = [
     resolve:{
       user:UserDataResolver
   },
+  },
+  {
+    path: 'guider',
+    loadChildren: () => import('./modules/admin/guider/guider.module').then( m => m.GuiderPageModule)
   },
 
 
