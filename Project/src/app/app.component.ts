@@ -20,6 +20,5 @@ export class AppComponent implements OnInit {
   constructor(public auth:AuthService) {}
   ngOnInit(): void {
       // this.auth.logout()
-
   }
 }
