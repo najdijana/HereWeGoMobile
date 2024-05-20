@@ -13,7 +13,8 @@ export interface Packages{
     plan?:Plan[];
     inclusions?:Inclusions[];
     exclusions?:Inclusions[];
-    createdBy?:'GUIDER'|'ADMIN'
+    createdBy?:'GUIDER'|'ADMIN';
+    startDate:Date;
 }
 
 export interface Plan{

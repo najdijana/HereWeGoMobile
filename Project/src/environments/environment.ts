@@ -12,7 +12,9 @@ export const environment = {
       messagingSenderId: "346219722252",
       appId: "1:346219722252:web:cc72d5fd4322c6bbe76029",
       measurementId: "G-S7GJ4JELV0"
-  }
+  },
+  stripeKey:"pk_test_51PHWihLUgkh4Hcii5lrC4ISdZXApTtzyQqhWs62x0Z8f9x4U2TiiHnz9nEcfIfkhwV3fVLo4UejcfOtqS8K0YYwv00wjrWmaga"
+
 };
 
 
