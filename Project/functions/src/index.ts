@@ -13,13 +13,52 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import { RoleTypeOptions, User } from "./models/user.interface";
 admin.initializeApp();
-// Start writing functions
-// https://firebase.google.com/docs/functions/typescript
 
-export const helloWorld = functions.https.onRequest((request, response) => {
-  logger.info("Hello logs!", {structuredData: true});
-  response.send("Hello from Firebase!");
-});
+// const stripe = require('stripe')(functions.config().stripe.testkey);
+// // Start writing functions
+// // https://firebase.google.com/docs/functions/typescript
+
+
+// exports.stripeCharge = functions.firestore
+//     .document('users/{userId}/payments/{paymentId}')
+//     .onWrite(async (change, context) => {
+//         const payment = change.after.data();
+//         const userId = context.params.userId;
+//         const paymentId = context.params.paymentId;
+
+//         // Checks if payment exists or if it has already been charged
+//         if (!payment || payment.charge) return null;
+
+//         try {
+//             const userRef = admin.firestore().collection('users').doc(userId);
+//             const amount = payment.amount;
+//             const idempotency_key = paymentId;  // Prevent duplicate charges
+//             const source = payment.token.id;
+//             const currency = 'usd';
+
+//             // Create a PaymentIntent instead of a direct charge
+//             const paymentIntent = await stripe.paymentIntents.create({
+//                 amount: parseInt(amount, 10), // amount should be a number
+//                 currency: currency,
+//                 payment_method: source,
+//                 confirmation_method: 'automatic',
+//                 confirm: true,
+//             }, {
+//                 idempotencyKey: idempotency_key
+//             });
+
+//     // Save the paymentIntent details back to Firestore under the payment document
+//     const paymentRef = userRef.collection('payments').doc(paymentId);
+//     await paymentRef.set({ charge: paymentIntent }, { merge: true });
+
+//     return { success: true };
+// } catch (error) {
+//     console.error("Error processing payment: ", error);
+//     return { error };
+// }
+//     });
+
+
 
 exports.updateGuiderOnUserUpdate = functions.firestore
     .document('users/{userId}')
