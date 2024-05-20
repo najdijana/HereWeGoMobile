@@ -9,7 +9,7 @@
   <div class="relative bg-change">
     <div class="relative bg-change">
       <img [src]="package?.image" alt="Banner Image" class="w-full h-auto shadow-banner" style=" margin-bottom: 20px;">
-      <ion-button expand="block" color="primary" (click)="booking()" class="absolute top-1/2 start-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white shadow-xl">Book Now</ion-button>
+      <ion-button expand="block" color="primary" (click)="handleBookNow()" class="absolute top-1/2 start-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white shadow-xl">Book Now</ion-button>
     </div>
   </div>
 
@@ -174,7 +174,7 @@
       </div>
       <p>Overall, Batroun is a fantastic destination for a relaxing and culturally rich vacation. The combination of history, natural beauty, and welcoming locals made this trip an unforgettable experience. I can't wait to return to Batroun in the future.</p>
     </div>
-    <ion-button (click)="addReview()" color="primary" expand="block">Add A Review</ion-button>
+    <!-- <ion-button (click)="addReview()" color="primary" expand="block">Add A Review</ion-button> -->
   </div>
 
   <!-- Location with Map -->
