@@ -6,9 +6,9 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import {getStorage, provideStorage} from '@angular/fire/storage';
-import {AngularFireStorageModule} from '@angular/fire/compat/storage';
-import {getApp, initializeApp, provideFirebaseApp} from '@angular/fire/app';
+import { getStorage, provideStorage } from '@angular/fire/storage';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
+import { getApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from '../environments/environment';
@@ -18,25 +18,27 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ProfileResolver } from './modules/auth/user-profile/profile.resolver';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
-
 @NgModule({
   declarations: [AppComponent],
   imports: [
-    BrowserModule, 
-    IonicModule.forRoot(), 
+    BrowserModule,
+    IonicModule.forRoot(),
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule.enablePersistence(),    
+    AngularFirestoreModule.enablePersistence(),
     AngularFireStorageModule,
-    provideStorage(() => getStorage()),
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
     FormsModule,
     CommonModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule,
-  
+    BrowserAnimationsModule
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },ProfileResolver, provideAnimationsAsync()],
+  providers: [
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    ProfileResolver,
+    provideAnimationsAsync(),
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideStorage(() => getStorage())
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
