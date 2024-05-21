@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { BookingsPageRoutingModule } from './bookings-routing.module';
 
 import { BookingsPage } from './bookings.page';
+import { GmapserviceService } from './services/gmapservice.service';
 
 @NgModule({
   imports: [
@@ -14,6 +15,9 @@ import { BookingsPage } from './bookings.page';
     FormsModule,
     IonicModule,
     BookingsPageRoutingModule
+  ],
+  providers: [
+    GmapserviceService,
   ],
   declarations: [BookingsPage]
 })

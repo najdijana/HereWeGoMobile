@@ -70,3 +70,14 @@ button {
     max-width: 400px; /* Adjust the max width as needed */
     margin-top: 20px;
   }
+.map{
+  position: absolute;
+  height: 50%;
+  width: 90%;
+  opacity: 0;
+  background-color: transparent;
+  transition: opacity 150ms ease-in;
+}
+.map.visible{
+  opacity: 1;
+}

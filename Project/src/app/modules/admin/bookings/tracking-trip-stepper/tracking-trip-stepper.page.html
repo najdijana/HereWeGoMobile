@@ -13,21 +13,24 @@
       <ion-title size="large">Track your trip</ion-title>
     </ion-toolbar>
   </ion-header>
-
-  <mat-horizontal-stepper linear>
+  <mat-horizontal-stepper linear >
     <mat-step *ngFor="let day of tripPlan; let i = index" [stepControl]="dayForm">
       <form [formGroup]="dayForm">
         <!-- <ng-template matStepLabel>{{ day.title }}</ng-template> -->
         <div *ngFor="let todo of day.todo" class="mb-8">
-          <mat-checkbox formControlName="isChecked" color="primary">{{ todo }}</mat-checkbox>
+          <mat-checkbox formControlName="isChecked" color="primary">{{ todo.description }}</mat-checkbox>
         </div>
+        <!--
         <div class="mt-4">
           <img src="../../../../../assets/img/googl_ED.jpg" alt="">
         </div>
+-->
         <div class="step-buttons">
           <button mat-stroked-button matStepperPrevious *ngIf="i > 0">Back</button>
           <button mat-flat-button matStepperNext color="primary" *ngIf="i <= tripPlan.length - 1">Next</button>
         </div>
+
+       
       </form>
     </mat-step>
 
@@ -37,11 +40,12 @@
         <div class="rating-review">
           <h3 class="rate-title">Rate Us</h3> <!-- Title above stars -->
           <div class="star-rating">
-            <mat-icon class="space-x-3 mb-7" *ngFor="let star of stars; let i = index" (click)="rate(i + 1)" [class.filled]="i < rating">
+            <mat-icon class="space-x-3 mb-7" *ngFor="let star of stars; let i = index" (click)="rate(i + 1)"
+              [class.filled]="i < rating">
               star
             </mat-icon>
           </div>
-           <mat-form-field appearance="fill" class="review-field">
+          <mat-form-field appearance="fill" class="review-field">
             <mat-label>Review</mat-label>
             <textarea matInput formControlName="review"></textarea>
           </mat-form-field>
@@ -53,4 +57,7 @@
       </form>
     </mat-step>
   </mat-horizontal-stepper>
+
+  <div class="map mt-4" #map>
+  </div>
 </ion-content>
