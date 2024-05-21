@@ -13,7 +13,7 @@
       <ion-title size="large">Track your trip</ion-title>
     </ion-toolbar>
   </ion-header>
-  <mat-horizontal-stepper linear >
+  <mat-horizontal-stepper (selectionChange)="stepChanged($event)" linear>
     <mat-step *ngFor="let day of tripPlan; let i = index" [stepControl]="dayForm">
       <form [formGroup]="dayForm">
         <!-- <ng-template matStepLabel>{{ day.title }}</ng-template> -->
@@ -58,6 +58,5 @@
     </mat-step>
   </mat-horizontal-stepper>
 
-  <div class="map mt-4" #map>
-  </div>
+  <div *ngIf="currentStepIndex < tripPlan.length" class="map mt-4" #map></div>
 </ion-content>

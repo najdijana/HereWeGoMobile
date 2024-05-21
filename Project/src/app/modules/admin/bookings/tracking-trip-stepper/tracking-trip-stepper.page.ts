@@ -18,16 +18,18 @@ export class TrackingTripStepperPage implements OnInit {
   tripPlan: Plan[] = [];
   package: Packages;
   googleMaps: any;
-  // center = {
-  //   lat: 33.888630,
-  //   lng: 35.495480,
-  // };
+  center = {
+    lat: 33.888630,
+    lng: 35.495480,
+  };
   map: any;
   marker: any;
   mapListener: any;
   markerListener: any;
   intersectionObserver: any;
-
+  markers: any[][] = []; // Array to hold markers for each plan day
+  currentStepIndex: number = 0; // Initialize the index
+  
   @ViewChild('map', { static: false }) mapElementRef: ElementRef;
 
   constructor(
@@ -80,23 +82,53 @@ export class TrackingTripStepperPage implements OnInit {
     }
   }
 
+ 
   async addPlanMarkers() {
+    this.markers = [];
     for (let day of this.package.plan) {
+      let dayMarkers = [];
       for (let todo of day.todo) {
-        const locationLatLng = new google.maps.LatLng(todo.latitude, todo.longitude);
-        this.addMarker(locationLatLng, todo.description);
+        if (typeof todo.latitude === 'number' && typeof todo.longitude === 'number') {
+          const locationLatLng = new google.maps.LatLng(todo.latitude, todo.longitude);
+          const marker = await this.addMarker(locationLatLng, todo.description);
+          dayMarkers.push(marker);
+          console.log(`Marker created for ${todo.description} at [${todo.latitude}, ${todo.longitude}]`);
+        } else {
+          console.error('Invalid coordinates:', todo);
+        }
       }
+      this.markers.push(dayMarkers);
+    }
+    this.updateMarkersVisibility(0); // Initially display markers for the first day
+  }
+  
+  async addMarker(location: any, title: string) {
+    try {
+      const marker = new google.maps.Marker({
+        map: this.map,
+        position: location,
+        title: title,
+        visible: false // Markers are initially not visible
+      });
+      return marker;
+    } catch (e) {
+      console.error('Error adding marker:', e);
     }
   }
 
-  async addMarker(location: any, title: string) {
-    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
-    const marker = new AdvancedMarkerElement({
-      map: this.map,
-      position: location,
-      title: title,
-      gmpDraggable: true,
+  updateMarkersVisibility(activeIndex: number) {
+    this.markers.forEach((dayMarkers, index) => {
+      dayMarkers.forEach(marker => {
+        marker.setVisible(index === activeIndex);
+        console.log(`Marker for ${marker.getTitle()} is now ${index === activeIndex ? 'visible' : 'hidden'}.`);
+      });
     });
+  }
+  
+  stepChanged(event: any) {
+    this.currentStepIndex = event.selectedIndex;
+    this.updateMarkersVisibility(event.selectedIndex);
+    console.log(`Stepping to index ${event.selectedIndex}`);
   }
 
 
