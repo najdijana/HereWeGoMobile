@@ -40,6 +40,7 @@ export class PaymentPage implements OnInit {
       locale: 'auto',
       token: async (token) => {
         this.payment = {
+          id:this.paymentService.createID(),
           token: token, // Use token.id instead of token
           amount: this.package.budget.toString(),
           package:this.package,
@@ -52,7 +53,7 @@ export class PaymentPage implements OnInit {
             .collection()
             .doc(this.user?.uid)
             .collection('payments')
-            .doc()
+            .doc(this.payment.id)
             .set(this.payment, { merge: true }).then(data => {
               this.paymentProcessed = true;
             }).finally(()=>{
