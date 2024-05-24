@@ -1,0 +1,36 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Location Detector</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="container">
+    <div *ngIf="!uploadedImage; else uploadedContent">
+      <div class="image-wrapper mt-10">
+        <img src="../../../../assets/img/map.jpg" alt="World Map" class="world-map">
+      </div>
+      <h2>Image Location Search</h2>
+      <p>We find where a photo has been taken in Lebanon using Artificial Intelligence</p>
+      <ion-button expand="block" (click)="uploadPhoto()">Upload a Photo</ion-button>
+      <p class="terms mt-5">
+        By uploading a photo, you agree to our 
+        <a href="#">Terms & Conditions</a> and 
+        <a href="#">Privacy Policy</a>.
+      </p>
+    </div>
+    <ng-template #uploadedContent>
+      <div class="image-wrapper">
+        <img [src]="uploadedImage" alt="Uploaded Photo" class="uploaded-photo">
+      </div>
+      <div *ngIf="predictedLocation">
+        <h3 class="font-bold">{{ predictedLocation.name }}</h3>
+        <p>{{ predictedLocation.description }}</p>
+      </div>
+      <ion-button expand="block" (click)="uploadAnother()">Upload Another</ion-button>
+    </ng-template>
+  </div>
+</ion-content>

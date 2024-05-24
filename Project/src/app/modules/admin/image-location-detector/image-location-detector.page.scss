@@ -1,0 +1,47 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+}
+
+.image-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.world-map {
+  width: 150px;
+  height: 150px;
+}
+
+.uploaded-photo {
+  width: 100%;
+  max-width: 300px;
+  border-radius: 8px;
+}
+
+h2 {
+  font-size: x-large;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+p {
+  margin: 10px 0;
+}
+
+.terms {
+  font-size: 12px;
+}
+
+.terms a {
+  color: var(--ion-color-primary);
+}
+
+.mt-5 {
+  margin-top: 2rem;
+}
