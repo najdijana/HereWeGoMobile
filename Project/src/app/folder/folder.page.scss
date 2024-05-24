@@ -33,3 +33,35 @@ df-messenger {
   --df-messenger-chat-background-color: #ffffff; /* White background for the chat area */
   --df-messenger-input-box-color: #ffffff; /* White background for the input area */
 }
+
+.banner {
+  position: relative;
+  width: 100%; /* Adjust width as necessary */
+ // height: 300px; /* Adjust height as necessary */
+}
+
+.banner ion-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures the image covers the banner area */
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Adjust black transparency as needed */
+}
+
+.explore-button {
+  position: absolute;
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); 
+  font-size: 14px; 
+  --background: #86B817; 
+}
+

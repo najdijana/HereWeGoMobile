@@ -11,23 +11,17 @@
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Home </ion-title>
+      <div class="banner">
+        <div class="overlay"></div>
+        <ion-img src="../../assets/img/bg-hero.jpg" alt="Banner description"></ion-img>
+        <ion-button class="explore-button" style="color: white; padding: 10px;">Explore Now</ion-button>
+      </div>
+
     </ion-toolbar>
   </ion-header>
-
- <app-services> </app-services>
-
-<!--
- <ion-fab slot="fixed" horizontal="end" vertical="bottom">
-  <ion-fab-button (click)="openChatbot()">
-    <ion-icon name="chatbox" style="color: white;"></ion-icon>
-  </ion-fab-button>
-
-</ion-fab>-->
-<df-messenger
-  intent="WELCOME"
-  chat-title="chatbot"
-  agent-id="b1f764c0-760d-4bb5-85f6-53a3561792d8"
-  language-code="en">
-</df-messenger>
+  <app-services> </app-services>
+  <df-messenger intent="WELCOME" chat-title="chatbot" agent-id="b1f764c0-760d-4bb5-85f6-53a3561792d8"
+    language-code="en">
+  </df-messenger>
 
 </ion-content>
