@@ -12,6 +12,8 @@ import * as logger from "firebase-functions/logger";
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import { RoleTypeOptions, User } from "./models/user.interface";
+// import { QueryDocumentSnapshot } from "firebase-admin/firestore";
+// import { Review } from "./models/review.interface";
 admin.initializeApp();
 
 // const stripe = require('stripe')(functions.config().stripe.testkey);
@@ -96,3 +98,18 @@ exports.updateGuiderOnUserUpdate = functions.firestore
         }
         return null;
     });
+
+// exports.syncReviewToUser = functions.firestore
+// .document('Packages/{packageId}/review/{reviewId}')
+// .onCreate(async (change:QueryDocumentSnapshot, context:functions.EventContext) => {
+//     const review = change.data() as Review;
+//     const userId = review.user?.uid; // Assuming the user ID is stored in review.user.id
+
+//     // Remove the user attribute from the review
+//     const { user, ...reviewWithoutUser } = review;
+
+//     // Add the review to the user's subcollection
+//     await admin.firestore().collection('users').doc(userId).collection('review').doc(review.id).set(reviewWithoutUser);
+
+//     console.log(`Review ${review.id} synced to user ${userId}`);
+// });
