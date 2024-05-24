@@ -1,0 +1,72 @@
+.mat-horizontal-stepper-header {
+    background-color: #f3f4f6;
+  }
+  
+  .mat-step-label {
+    font-size: 1.2em;
+    font-weight: bold;
+  }
+  
+  .mat-checkbox {
+    margin: 10px 0;
+  }
+  
+  button {
+    margin: 10px;
+  }
+  
+  .stepper-container {
+      width: 100%;
+      max-width: 600px; /* Adjust the max-width as needed */
+      margin: 0 auto; /* Center align the stepper container */
+    }
+    
+    mat-horizontal-stepper {
+      width: 100%;
+    }
+    
+    .step-buttons {
+      margin-top: 20px;
+    }
+    
+    .step-label {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    
+    .rating-review {
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* Center align the content horizontally */
+      justify-content: center; /* Center align the content vertically if needed */
+      text-align: center; /* Center align the text */
+      margin-top: 20px; /* Adjust the margin as needed */
+    }
+    
+    .rate-title {
+      font-size: 1.5em;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    
+    .star-rating {
+      display: flex;
+      gap: 5px;
+      justify-content: center; /* Center the stars horizontally */
+    }
+    
+    .star-rating mat-icon {
+      cursor: pointer;
+      font-size: 30px;
+    }
+    
+    .star-rating mat-icon.filled {
+      color: gold;
+    }
+    
+    .review-field {
+      width: 100%;
+      max-width: 400px; /* Adjust the max width as needed */
+      margin-top: 20px;
+    }
