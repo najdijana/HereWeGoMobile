@@ -49,6 +49,9 @@ export class TrackingTripStepperPage implements OnInit,AfterViewInit {
     private gmaps: GmapserviceService,
   private renderer: Renderer2,
   private reviewService: ReviewService) {}
+  ngAfterViewInit(): void {
+    this.loadMap();
+  }
 
   ngOnInit() {
     this.package = this.route.snapshot.data.package as Packages;
@@ -67,9 +70,7 @@ export class TrackingTripStepperPage implements OnInit,AfterViewInit {
     this.listenOnValueChanges();
   }
 
-  ngAfterViewInit(){
-    this.loadMap();
-  }
+
 
   async loadMap() {
     try {
