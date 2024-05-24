@@ -16,6 +16,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { PackageResolver } from '../../packages/resolver/package.resolver';
 import { PackageService } from '../../packages/Services/packages.service';
+import { ReviewService } from './reviews.service';
 @NgModule({
   imports: [
     CommonModule,
@@ -32,6 +33,6 @@ import { PackageService } from '../../packages/Services/packages.service';
     MatIconModule,
   ],
   declarations: [TrackingTripStepperPage],
-  providers:[PackageResolver,PackageService]
+  providers:[PackageResolver,PackageService,ReviewService]
 })
 export class TrackingTripStepperPageModule {}
