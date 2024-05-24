@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { BookingsPage } from './bookings.page';
 import { PackageResolver } from '../packages/resolver/package.resolver';
+import { ReviewResolver } from './history-tracking-stepper/review.resolver';
 
 const routes: Routes = [
   {
@@ -16,7 +17,16 @@ const routes: Routes = [
   {
     path: ':id/trip-history',
     loadChildren: () => import('./tracking-trip-stepper/tracking-trip-stepper.module').then( m => m.TrackingTripStepperPageModule),
+  },
+  {
+    path: ':id/history-tracking-stepper',
+    loadChildren: () => import('./history-tracking-stepper/history-tracking-stepper.module').then( m => m.HistoryTrackingStepperPageModule),
+    resolve:{
+      package:PackageResolver,
+    }
+
   }
+
 
 ];
 

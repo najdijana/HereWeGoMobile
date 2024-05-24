@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Payments } from 'src/app/shared/models/payments.interface';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PaymentStatus, Payments } from 'src/app/shared/models/payments.interface';
 import { User } from 'src/app/shared/models/user.interface';
 import { UserService } from 'src/app/shared/services/user.service';
 import { Timestamp } from 'firebase/firestore';
+import { PackageService } from '../packages/Services/packages.service';
+import { PackageResolver } from '../packages/resolver/package.resolver';
+import { AlertController, ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-bookings',
@@ -17,8 +20,10 @@ export class BookingsPage implements OnInit {
 
   constructor(
     private userService: UserService,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    private packageService:PackageService,
+    private router:Router,
+    private alertController: AlertController  ) {}
 
   ngOnInit() {
     this.user = this.route.snapshot.data.user as User;
@@ -39,32 +44,51 @@ export class BookingsPage implements OnInit {
             }
             return payment;
           });
+          this.filterActivePayments();
+          console.log('Filtered Payments:', this.payments);
           this.groupPaymentsByDate();
-          console.log('Grouped Payments:', this.groupedPayments);
         },
         (error) => {
           console.error('Error fetching payments:', error);
         }
-      );
-  }
+      );     
+    }
+    filterActivePayments() {
+      this.payments = this.payments.filter(payment => payment.paymentStatus === PaymentStatus.ACTIVE);
+    }
 
-  groupPaymentsByDate() {
-    const grouped = {};
-    this.payments.forEach(payment => {
-      const date = payment.package.startDate;
-      const dateString = date.toISOString().split('T')[0]; // YYYY-MM-DD format
-      if (!grouped[dateString]) {
-        grouped[dateString] = [];
-      }
-      grouped[dateString].push(payment);
-    });
-    this.groupedPayments = Object.keys(grouped)
-      .map(dateString => ({
-        date: new Date(dateString),
-        payments: grouped[dateString]
-      }))
-      .sort((a, b) => a.date.getTime() - b.date.getTime()); // Sort by date
-  }
+    getHistory( packageid:string){
+      this.packageService
+      .collection()
+      .doc(packageid)
+      .collection('review', ref => ref.where('user.uid', '==', this.user.uid).orderBy('ratedAt', 'desc').limit(1))
+      .valueChanges()
+      .subscribe(
+        (review) => {
+          console.log("review",review[0]);
+          this.router.navigate(['bookings',packageid,'history-tracking-stepper',review[0].id])
+          // [routerLink]="'/bookings/' + payment.package.id + '/trip-history'" 
+        }
+      );     
+    }
+
+    groupPaymentsByDate() {
+      const grouped = {};
+      this.payments.forEach(payment => {
+        const date = payment.package.startDate;
+        const dateString = date.toISOString().split('T')[0]; // YYYY-MM-DD format
+        if (!grouped[dateString]) {
+          grouped[dateString] = [];
+        }
+        grouped[dateString].push(payment);
+      });
+      this.groupedPayments = Object.keys(grouped)
+        .map(dateString => ({
+          date: new Date(dateString),
+          payments: grouped[dateString]
+        }))
+        .sort((a, b) => a.date.getTime() - b.date.getTime()); // Sort by date
+    }
 
   isPastDate(date: Date): boolean {
     const today = new Date();
@@ -78,5 +102,47 @@ export class BookingsPage implements OnInit {
       date.getMonth() === today.getMonth() &&
       date.getFullYear() === today.getFullYear()
     );
+  }
+
+  async openCancelModal(paymentId: string) {
+    const alert = await this.alertController.create({
+      header: 'Confirm Cancel',
+      message: 'Are you sure you want to cancel this trip?',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel action cancelled');
+          }
+        },
+        {
+          text: 'Yes',
+          handler: () => {
+            this.cancelTrip(paymentId);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  cancelTrip(paymentId: string) {
+    this.userService
+      .collection()
+      .doc(this.user.uid)
+      .collection('payments')
+      .doc(paymentId)
+      .update({ paymentStatus: PaymentStatus.CANCELED })
+      .then(() => {
+        console.log('Trip cancelled successfully');
+        // Re-fetch payments or update local state
+        this.payments = this.payments.filter(payment => payment.id !== paymentId);
+        this.groupPaymentsByDate();
+      })
+      .catch(error => {
+        console.error('Error cancelling trip:', error);
+      });
   }
 }

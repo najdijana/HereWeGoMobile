@@ -55,10 +55,10 @@
             </ng-container>
             <ng-template #pastOrUpcomingTripButtons>
               <ng-container *ngIf="isPastDate(group.date); else upcomingTripButtons">
-                <ion-button [routerLink]="'/bookings/' + payment.package.id + '/trip-history'" expand="block" color="success">View History</ion-button>
+                <ion-button (click)="getHistory(payment.package.id)" expand="block" color="success">View History</ion-button>
               </ng-container>
               <ng-template #upcomingTripButtons>
-                <ion-button expand="block" color="danger">Cancel Trip</ion-button>
+                <ion-button (click)="openCancelModal(payment.id)" expand="block" color="danger">Cancel Trip</ion-button>
               </ng-template>
             </ng-template>
           </ion-card-content>
