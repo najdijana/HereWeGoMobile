@@ -14,7 +14,7 @@
     </ion-toolbar>
   </ion-header>
 
-  <mat-horizontal-stepper>
+  <mat-horizontal-stepper (selectionChange)="stepChanged($event)">
     <mat-step *ngFor="let day of tripPlan; let i = index" [stepControl]="dayForm">
       <form [formGroup]="dayForm">
         <!-- <ng-template matStepLabel>{{ day.title }}</ng-template> -->
