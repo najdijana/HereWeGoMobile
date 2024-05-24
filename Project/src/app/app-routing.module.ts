@@ -89,7 +89,11 @@ const routes: Routes = [
   {
     path: 'guider',
     loadChildren: () => import('./modules/admin/guider/guider.module').then( m => m.GuiderPageModule)
+  },  {
+    path: 'image-location-detector',
+    loadChildren: () => import('./modules/admin/image-location-detector/image-location-detector.module').then( m => m.ImageLocationDetectorPageModule)
   },
+
 
 
 
