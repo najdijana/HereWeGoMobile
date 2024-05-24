@@ -3,6 +3,7 @@ import { Packages } from 'src/app/shared/models/packages.interface';
 import { PopoverController } from '@ionic/angular';
 import { FilterPackagesComponent } from './filter-packages/filter-packages.component';
 import { PackageService } from './Services/packages.service';
+import { Review } from 'src/app/shared/models/review.interface';
 
 @Component({
   selector: 'app-packages',
@@ -37,12 +38,29 @@ export class PackagesPage implements OnInit {
   }
 
   getPackages() {
-    this.packageService.collection().valueChanges().subscribe(packages => {
+    this.packageService.collection().valueChanges().subscribe(async packages => {
       this.packages = packages;
       this.allPackages = packages;
       this.filteredPackages = packages;
+      for (const pkg of this.packages) {
+        await this.getReviewsForPackage(pkg);
+      }
       this.updatePagedPackages(0);
     });
+  }
+
+  async getReviewsForPackage(pkg: Packages) {
+    // this.reviewService.setParentPathPackage(pkg.id);
+    const reviewsSnapshot = await this.packageService.collection().doc(pkg.id).collection('review').get().toPromise();
+    const reviews = reviewsSnapshot.docs.map(doc => doc.data() as Review);
+
+    pkg.nbreviews = reviews.length;
+    if (reviews.length > 0) {
+      const totalRating = reviews.reduce((sum, review) => sum + (review.rate || 0), 0);
+      pkg.review = totalRating / reviews.length;
+    } else {
+      pkg.review = 0;
+    }
   }
 
   // Other methods remain the same

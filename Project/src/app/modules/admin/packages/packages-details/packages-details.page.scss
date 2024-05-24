@@ -7,3 +7,63 @@ h1 {
     font-size: 1.25rem; /* Example size, adjust as needed */
     font-weight: bold;
 }
+/* your-component-name.component.css */
+.review-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.review-card {
+  width: 100%;
+  max-width: 600px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.profile-image {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 16px;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.user-name {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+}
+
+.star-icon {
+  margin-right: 4px;
+}
+
+.likes {
+  margin-left: 8px;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.review-text {
+  text-align: left;
+  color: #333;
+}

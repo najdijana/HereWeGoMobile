@@ -5,7 +5,9 @@ import { Packages } from 'src/app/shared/models/packages.interface';
 import { Payments } from 'src/app/shared/models/payments.interface';
 import { User } from 'src/app/shared/models/user.interface';
 import { UserService } from 'src/app/shared/services/user.service';
-
+import { PackageService } from '../Services/packages.service';
+import { ReviewService } from '../../bookings/tracking-trip-stepper/reviews.service';
+import{Review,Reviews}from'../../../../shared/models/review.interface'
 @Component({
   selector: 'app-packages-details',
   templateUrl: './packages-details.page.html',
@@ -16,10 +18,11 @@ export class PackagesDetailsPage implements OnInit {
   isPlanOpen: boolean[];
   user: User;
   payment: Payments | null = null;
-
+  reviews:Reviews;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private reviewSerive:ReviewService,
     private userService: UserService,
     private alertController: AlertController // Import AlertController
   ) {}
@@ -49,6 +52,12 @@ export class PackagesDetailsPage implements OnInit {
           this.payment = null;
           console.log('No active payment found');
         }
+      });
+
+      this.reviewSerive.setParentPathPackage(this.package.id);
+      this.reviewSerive.collection().valueChanges().subscribe((review)=>{
+        console.log("review",review);
+        this.reviews = review;
       });
   }
 

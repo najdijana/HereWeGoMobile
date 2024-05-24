@@ -20,7 +20,13 @@ export interface Packages{
 export interface Plan{
     day?:number;
     title?:string;
-    todo?:string[];
+    todo?:Todo[];
+}
+
+export interface Todo{
+    description?:string;
+    latitude?:any;
+    longitude?:any;
 }
 
 export interface Inclusions{
