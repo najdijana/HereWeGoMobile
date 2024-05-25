@@ -3,6 +3,9 @@ import { Accommodations } from 'src/app/shared/models/accommodations.interface';
 import { AccommodationService } from './accomodations.service';
 import { FilterAccommodationsComponent } from './filter-accommodations/filter-accommodations.component';
 import { PopoverController } from '@ionic/angular';
+import { User } from 'src/app/shared/models/user.interface';
+import { UserService } from 'src/app/shared/services/user.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Component({
   selector: 'app-accomodations',
@@ -19,10 +22,14 @@ export class AccomodationsPage implements OnInit {
   pageSize: number = 6;
   totalPages: number;
   favoriteStatus: {[key: string]: boolean} = {};
+  user: User;
 
-  constructor(private accommodationService: AccommodationService,private popoverController:PopoverController) {}
+  constructor(private accommodationService: AccommodationService,private popoverController:PopoverController,private userService: UserService,private authService:AuthService) {}
 
   ngOnInit() {
+    this.user = this.authService.authUser;
+    console.log("user",this.user)
+
     this.accommodationService.collection().valueChanges().subscribe(data => {
       this.accommodations = data;
       this.allAccommodations = data;
@@ -32,17 +39,37 @@ export class AccomodationsPage implements OnInit {
       });
       this.updatePagedPackages(0);
     });
+    this.getUserFavorites().subscribe(favorites => {
+      favorites.forEach(favorite => {
+        this.favoriteStatus[favorite.id] = true;
+      });
+    });
   }
 
-  toggleFavorite(destination: Accommodations) {
-    const isCurrentlyFavorite = this.favoriteStatus[destination.id] || false;
-    this.favoriteStatus[destination.id] = !isCurrentlyFavorite;
-    console.log("Selected Destination:", destination);
-    console.log("Favorite Status:", this.favoriteStatus[destination.id]);
-
-    const ref = this.accommodationService.doc(destination.id);
-    return ref.update({ isFavorite: this.favoriteStatus[destination.id] });
+  getUserFavorites() {
+    return this.userService.collection().doc(this.user?.uid).collection('Accommodation').valueChanges();
   }
+
+  addFavorite(activity: Accommodations) {
+    return this.userService.collection().doc(this.user?.uid).collection('Accommodation').doc(activity.id).set(activity);
+  }
+
+  removeFavorite(activityId: string) {
+    return this.userService.collection().doc(this.user?.uid).collection('Accommodation').doc(activityId).delete();
+  }
+
+  toggleFavorite(activity: Accommodations) {
+    if (this.favoriteStatus[activity.id]) {
+      this.removeFavorite(activity.id).then(() => {
+        this.favoriteStatus[activity.id] = false;
+      });
+    } else {
+      this.addFavorite(activity).then(() => {
+        this.favoriteStatus[activity.id] = true;
+      });
+    }
+  }
+
 
   filterAccommodations() {
     this.filteredAccommodations = this.allAccommodations.filter(acc => {
