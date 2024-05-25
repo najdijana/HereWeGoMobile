@@ -33,7 +33,9 @@ export class ActivitiesPage implements OnInit {
 
 
   getActivities() {
-    this.activitiesService.collection().valueChanges().subscribe(activities => {
+    this.activitiesService.collection(ref => ref.where('published', '==', true))
+    .valueChanges()
+    .subscribe(activities => {
       this.activities = activities;
       this.allActivities = activities;
       this.filteredActivities = activities;
@@ -42,7 +44,7 @@ export class ActivitiesPage implements OnInit {
       });
       this.updatePagedActivities(0);
     });
-  }
+}
 
   toggleFavorite(destination: Activities) {
     const isCurrentlyFavorite = this.favoriteStatus[destination.id] || false;

@@ -14,7 +14,7 @@ export class LoaderPage implements OnInit {
   ngOnInit(): void {
     this.fireauth.authState.subscribe(user => {
       if (user) {
-        this.router.navigate(['folder/Inbox']); // Adjust as necessary for default folder
+        this.router.navigate(['home']); // Adjust as necessary for default folder
       } else {
         this.router.navigate(['sign-in']);
       }

@@ -10,7 +10,7 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'folder/:id',
+    path: 'home',
     loadChildren: () => import('./folder/folder.module').then( m => m.FolderPageModule),
     resolve:{
       userDataResolver:UserDataResolver
@@ -61,7 +61,7 @@ const routes: Routes = [
     loadChildren: () => import('./modules/admin/transportations/transportations.module').then( m => m.TransportationsPageModule)
   },
   {
-    path: 'accomodations',
+    path: 'accommodations',
     loadChildren: () => import('./modules/admin/accomodations/accomodations.module').then( m => m.AccomodationsPageModule)
   },
   {

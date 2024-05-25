@@ -22,7 +22,9 @@ export class RestaurantsPage  implements OnInit {
   constructor(private restaurantsService: RestaurantsService,private popoverController: PopoverController) {}
 
   ngOnInit() {
-    this.restaurantsService.collection().valueChanges().subscribe(data => {
+    this.restaurantsService.collection(ref => ref.where('published', '==', true))
+    .valueChanges()
+    .subscribe(data => {
       this.restaurants = data;
       this.allRestaurants = data;
       this.filteredRestaurants = data;
@@ -31,7 +33,7 @@ export class RestaurantsPage  implements OnInit {
       });
       this.updatePagedPackages(0);
     });
-  }
+}
 
   toggleFavorite(destination: Restaurants) {
     const isCurrentlyFavorite = this.favoriteStatus[destination.id] || false;

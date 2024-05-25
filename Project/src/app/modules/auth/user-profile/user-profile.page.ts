@@ -89,7 +89,7 @@ export class UserProfilePage implements OnInit {
 
     this.authService.authUser$.subscribe(user => {
       if (!user) {
-        this.router.navigate(['folder/Inbox']);
+        this.router.navigate(['home']);
       }
     });
     
@@ -230,7 +230,7 @@ export class UserProfilePage implements OnInit {
     }).finally(() => {
     this.userForm.enable();
     this.updating = false;
-    this.router.navigate(['folder/Inbox']);
+    this.router.navigate(['home']);
     });
     console.log("form data",data);
   }

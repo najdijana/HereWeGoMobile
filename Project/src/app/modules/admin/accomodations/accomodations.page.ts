@@ -23,7 +23,9 @@ export class AccomodationsPage implements OnInit {
   constructor(private accommodationService: AccommodationService,private popoverController:PopoverController) {}
 
   ngOnInit() {
-    this.accommodationService.collection().valueChanges().subscribe(data => {
+    this.accommodationService.collection(ref => ref.where('published', '==', true))
+    .valueChanges()
+    .subscribe(data => {
       this.accommodations = data;
       this.allAccommodations = data;
       this.filteredAccommodations = data;
@@ -32,7 +34,7 @@ export class AccomodationsPage implements OnInit {
       });
       this.updatePagedPackages(0);
     });
-  }
+}
 
   toggleFavorite(destination: Accommodations) {
     const isCurrentlyFavorite = this.favoriteStatus[destination.id] || false;

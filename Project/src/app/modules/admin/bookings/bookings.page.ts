@@ -17,7 +17,7 @@ export class BookingsPage implements OnInit {
   user: User;
   payments: Payments[];
   groupedPayments: { date: Date, payments: Payments[] }[];
-
+ dateString: any;
   constructor(
     private userService: UserService,
     private route: ActivatedRoute,
@@ -65,22 +65,30 @@ export class BookingsPage implements OnInit {
       .valueChanges()
       .subscribe(
         (review) => {
-          console.log("review",review[0]);
-          this.router.navigate(['bookings',packageid,'history-tracking-stepper',review[0].id])
-          // [routerLink]="'/bookings/' + payment.package.id + '/trip-history'" 
+          if(review[0]){
+            console.log("review",review[0]);
+            this.router.navigate(['bookings',packageid,'history-tracking-stepper',review[0].id])
+            // [routerLink]="'/bookings/' + payment.package.id + '/trip-history'"
+          }
+          else{
+            this.router.navigate(['bookings',packageid,'tracking-trip-stepper'])
+          }
         }
-      );     
+      );    
     }
 
     groupPaymentsByDate() {
       const grouped = {};
       this.payments.forEach(payment => {
-        const date = payment.package.startDate;
-        const dateString = date.toISOString().split('T')[0]; // YYYY-MM-DD format
-        if (!grouped[dateString]) {
-          grouped[dateString] = [];
+        const date = payment?.package?.startDate;
+        if(date){
+           this.dateString = date?.toISOString().split('T')[0]; // YYYY-MM-DD format
+           if (!grouped[this.dateString]) {
+            grouped[this.dateString] = [];
+          }
+          grouped[this.dateString].push(payment);
         }
-        grouped[dateString].push(payment);
+       
       });
       this.groupedPayments = Object.keys(grouped)
         .map(dateString => ({

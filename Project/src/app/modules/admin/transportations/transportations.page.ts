@@ -21,7 +21,9 @@ export class TransportationsPage implements OnInit {
   constructor(private transportationService: TransportationService) {}
 
   ngOnInit() {
-    this.transportationService.collection().valueChanges().subscribe(data => {
+    this.transportationService.collection(ref => ref.where('published', '==', true))
+    .valueChanges()
+    .subscribe(data => {
       this.transportations = data;
       this.allTransportations = data;
       this.filteredTransportations = data;
@@ -30,7 +32,7 @@ export class TransportationsPage implements OnInit {
       });
       this.updatePagedPackages(0);
     });
-  }
+}
 
   toggleFavorite(destination: Transportation) {
     const isCurrentlyFavorite = this.favoriteStatus[destination.id] || false;

@@ -17,7 +17,7 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  
+
   <div class="greeting">
     <p class="greeting-text">Greetings {{ this.auth?.firestoreUser?.firstName }}</p>
     <p class="greeting-text">Let’s Explore Together!</p>
@@ -84,6 +84,29 @@
       </ion-col>
     </ion-row>
 
+    <ion-row>
+      <ion-col>
+        <ion-header >
+            <ion-title size="large">Top Destinations</ion-title>
+        </ion-header>
+      
+        <ion-grid>
+        <ion-row>
+          <ion-col size="6" *ngFor="let destination of destinations">
+            <div [routerLink]="'destinations/' + destination?.name"  class="relative">
+              <img [src]="destination.image" alt="{{ destination.name }}" class="w-full h-40 object-cover rounded-lg shadow-2xl">
+              <div class="absolute inset-x-0 bottom-0 bg-black bg-opacity-50 text-white p-2 rounded-b-lg">
+                <h3 class="text-sm">{{ destination.name }}</h3>
+                <p class="text-xs">{{ destination.cities }} destinations</p>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      
+      </ion-col>
+    </ion-row>
+
 
     <ion-row>
       <ion-col size="6">
@@ -105,21 +128,9 @@
         </ion-card>
       </ion-col>
     </ion-row>
-    
-
-
   </ion-grid>
-  <!--
-  <app-services> </app-services>
--->
 
-  <!--
- <ion-fab slot="fixed" horizontal="end" vertical="bottom">
-  <ion-fab-button (click)="openChatbot()">
-    <ion-icon name="chatbox" style="color: white;"></ion-icon>
-  </ion-fab-button>
 
-</ion-fab>-->
   <df-messenger intent="WELCOME" chat-title="chatbot" agent-id="b1f764c0-760d-4bb5-85f6-53a3561792d8"
     language-code="en">
   </df-messenger>

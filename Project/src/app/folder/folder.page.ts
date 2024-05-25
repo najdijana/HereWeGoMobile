@@ -8,6 +8,8 @@ import { User } from 'firebase/auth';
 import Swiper from 'swiper';
 import { SwiperOptions } from 'swiper/types';
 import { WeatherService } from './services/weather.service';
+import { destination } from '../shared/models/topdest.interface';
+import { DestinationService } from '../modules/admin/top-destinations/destination.service';
 
 @Component({
   selector: 'app-folder',
@@ -19,6 +21,7 @@ export class FolderPage implements OnInit {
   public folder!: string;
   private activatedRoute = inject(ActivatedRoute);
   weatherData: any;
+  destinations:destination[];
 
   @ViewChild('swiper') swiper: Swiper;
 
@@ -34,7 +37,8 @@ export class FolderPage implements OnInit {
   constructor( 
      private modalController: ModalController,
      public auth:AuthService,
-     private weatherService: WeatherService,) {}
+     private weatherService: WeatherService,
+     private destinationService:DestinationService) {}
 
      weatherCondition: string = '';
      weatherIcon: string = '';
@@ -46,6 +50,7 @@ export class FolderPage implements OnInit {
     this.swiper = new Swiper('.swiper-container', this.swiperConfig);
   }
   ngOnInit() {
+    this.getTopDest();
     this.folder = this.activatedRoute.snapshot.paramMap.get('id') as string;
     console.log('id', this.folder);
     
@@ -63,6 +68,13 @@ export class FolderPage implements OnInit {
         console.error('Error fetching weather data', error);
       }
     );
+  }
+
+  getTopDest() {
+    this.destinationService.collection(ref => ref.limit(4)).valueChanges().subscribe((destinations) => {
+      this.destinations = destinations;
+      console.log("this.destinations", this.destinations);
+    });
   }
   getWeatherCondition(code: number): string {
     // Map weather code to weather condition
