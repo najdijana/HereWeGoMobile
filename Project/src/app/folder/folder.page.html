@@ -1,33 +1,127 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
+<ion-header>
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-menu-button autoHide="false"></ion-menu-button>
     </ion-buttons>
-    <ion-title>Home </ion-title>
+    <ion-title>Welcome {{this.auth?.firestoreUser?.displayName}}!</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/favorites']">
+        <ion-icon slot="icon-only" name="heart-outline"></ion-icon>
+      </ion-button>
+      <ion-button [routerLink]="['/user-profile', this.auth?.firestoreUser?.uid]">
+        <ion-icon slot="icon-only" name="person-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Home </ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  
+  <div class="greeting">
+    <p class="greeting-text">Greetings {{ this.auth?.firestoreUser?.firstName }}</p>
+    <p class="greeting-text">Let’s Explore Together!</p>
+  </div>
+  <div class="weather-info" *ngIf="weatherData">
+    <div class="weather-icon">
+      <ion-icon [name]="weatherIcon"></ion-icon>
+    </div>
+    <div class="weather-details">
+      <p class="temperature">{{ weatherData.hourly.temperature_2m[0] }} °C</p>
+      <p class="condition">{{ weatherCondition }}</p>
+    </div>
+  </div>
+  <div *ngIf="!weatherData">
+    <p>Loading weather data...</p>
+  </div>
 
- <app-services> </app-services>
+  <ion-grid>
+    <div class="swiper-container">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+          <ion-card class="collection-card" [routerLink]="['/activities']">
+            <img src="../../assets/img/activities.jpeg" />
+            <ion-card-header>
+              <ion-card-title>Activities</ion-card-title>
+            </ion-card-header>
+          </ion-card>
+        </div>
+        <div class="swiper-slide">
+          <ion-card class="collection-card" [routerLink]="['/accommodations']">
+            <img src="../../assets/img/accommodation.jpeg" />
+            <ion-card-header>
+              <ion-card-title>Lodges</ion-card-title>
+            </ion-card-header>
+          </ion-card>
+        </div>
+        <div class="swiper-slide">
+          <ion-card class="collection-card" [routerLink]="['/restaurants']">
+            <img src="../../assets/img/restaurant.jpeg" />
+            <ion-card-header>
+              <ion-card-title>Restaurants</ion-card-title>
+            </ion-card-header>
+          </ion-card>
+        </div>
+        <div class="swiper-slide">
+          <ion-card class="collection-card" [routerLink]="['/transportations']">
+            <img src="../../assets/img/transportation.jpeg" />
+            <ion-card-header>
+              <ion-card-title>Transportation</ion-card-title>
+            </ion-card-header>
+          </ion-card>
+        </div>
+      </div>
+      <!-- Add Pagination -->
+      <div class="swiper-pagination"></div>
+    </div>
 
-<!--
+    <ion-row>
+      <ion-col>
+        <ion-button expand="full" color="primary" [routerLink]="['/packages']">
+          <ion-icon slot="start" name="car-outline"></ion-icon>
+          Book Your Package
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+
+    <ion-row>
+      <ion-col size="6">
+        <ion-card class="external-link-card" (click)="openExternalUrl('https://ihjoz.com/')">
+          <img src="../../assets/img/ihjoz.png" />
+          <ion-card-header>
+            <ion-card-title>IHJOZ</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+      <ion-col size="6">
+        <ion-card class="chat-card" [routerLink]="['/chats']">
+          <ion-card-header>
+            <ion-card-title>
+              <ion-icon name="chatbubble-outline"></ion-icon>
+              Chat
+            </ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    
+
+
+  </ion-grid>
+  <!--
+  <app-services> </app-services>
+-->
+
+  <!--
  <ion-fab slot="fixed" horizontal="end" vertical="bottom">
   <ion-fab-button (click)="openChatbot()">
     <ion-icon name="chatbox" style="color: white;"></ion-icon>
   </ion-fab-button>
 
 </ion-fab>-->
-<df-messenger
-  intent="WELCOME"
-  chat-title="chatbot"
-  agent-id="b1f764c0-760d-4bb5-85f6-53a3561792d8"
-  language-code="en">
-</df-messenger>
+  <df-messenger intent="WELCOME" chat-title="chatbot" agent-id="b1f764c0-760d-4bb5-85f6-53a3561792d8"
+    language-code="en">
+  </df-messenger>
 
 </ion-content>

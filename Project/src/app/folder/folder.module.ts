@@ -10,6 +10,7 @@ import { FolderPage } from './folder.page';
 import { ServicesComponent } from './services/services.component';
 import { ChatbotComponent } from './chatbot/chatbot.component';
 import { ComponentsModule } from '../modules/admin/chats/components.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import { ComponentsModule } from '../modules/admin/chats/components.module';
     FormsModule,
     IonicModule,
     FolderPageRoutingModule,
+    HttpClientModule ,
     //ChatbotComponent,
     ComponentsModule
   ],
