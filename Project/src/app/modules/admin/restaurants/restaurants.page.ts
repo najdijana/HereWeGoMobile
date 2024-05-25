@@ -3,6 +3,9 @@ import { Restaurants } from 'src/app/shared/models/restaurants.interface';
 import { RestaurantsService } from './restaurants.service';
 import { PopoverController } from '@ionic/angular';
 import { FilterRestaurantsComponent } from './filter-restaurants/filter-restaurants.component';
+import { User } from 'src/app/shared/models/user.interface';
+import { AuthService } from 'src/app/shared/services/auth.service';
+import { UserService } from 'src/app/shared/services/user.service';
 
 @Component({
   selector: 'app-restaurants',
@@ -19,9 +22,13 @@ export class RestaurantsPage  implements OnInit {
   pageSize: number = 6;
   totalPages: number;
   favoriteStatus: {[key: string]: boolean} = {};
-  constructor(private restaurantsService: RestaurantsService,private popoverController: PopoverController) {}
+  user:User;
+  constructor(private restaurantsService: RestaurantsService, private popoverController: PopoverController, private userService: UserService,private authService:AuthService) {}
 
   ngOnInit() {
+    this.user = this.authService.authUser;
+    console.log("user",this.user)
+
     this.restaurantsService.collection().valueChanges().subscribe(data => {
       this.restaurants = data;
       this.allRestaurants = data;
@@ -31,16 +38,36 @@ export class RestaurantsPage  implements OnInit {
       });
       this.updatePagedPackages(0);
     });
+    this.getUserFavorites().subscribe(favorites => {
+      favorites.forEach(favorite => {
+        this.favoriteStatus[favorite.id] = true;
+      });
+    });
   }
 
-  toggleFavorite(destination: Restaurants) {
-    const isCurrentlyFavorite = this.favoriteStatus[destination.id] || false;
-    this.favoriteStatus[destination.id] = !isCurrentlyFavorite;
-    console.log("Selected Restaurants:", destination);
-    console.log("Favorite Status:", this.favoriteStatus[destination.id]);
+  
+  getUserFavorites() {
+    return this.userService.collection().doc(this.user?.uid).collection('Restaurants').valueChanges();
+  }
 
-    const ref = this.restaurantsService.doc(destination.id);
-    return ref.update({ isFavorite: this.favoriteStatus[destination.id] });
+  addFavorite(activity: Restaurants) {
+    return this.userService.collection().doc(this.user?.uid).collection('Restaurants').doc(activity.id).set(activity);
+  }
+
+  removeFavorite(activityId: string) {
+    return this.userService.collection().doc(this.user?.uid).collection('Restaurants').doc(activityId).delete();
+  }
+
+  toggleFavorite(activity: Restaurants) {
+    if (this.favoriteStatus[activity.id]) {
+      this.removeFavorite(activity.id).then(() => {
+        this.favoriteStatus[activity.id] = false;
+      });
+    } else {
+      this.addFavorite(activity).then(() => {
+        this.favoriteStatus[activity.id] = true;
+      });
+    }
   }
 
    // Other methods remain the same

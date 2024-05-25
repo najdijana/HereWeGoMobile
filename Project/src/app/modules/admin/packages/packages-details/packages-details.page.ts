@@ -58,7 +58,16 @@ export class PackagesDetailsPage implements OnInit {
       this.reviewSerive.collection().valueChanges().subscribe((review)=>{
         console.log("review",review);
         this.reviews = review;
+        this.calculateAverageRating();
       });
+  }
+  calculateAverageRating(): void {
+    if (this.reviews.length > 0) {
+      const totalRating = this.reviews.reduce((sum, review) => sum + (review.rate || 0), 0);
+      this.package.review = parseFloat((totalRating / this.reviews.length).toFixed(1));
+    } else {
+      this.package.review = 0;
+    }
   }
 
   togglePlan(index: number) {

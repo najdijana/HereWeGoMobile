@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Transportation } from 'src/app/shared/models/transportation.interface';
 import { TransportationService } from './transportation.service';
+import { User } from 'src/app/shared/models/user.interface';
+import { UserService } from 'src/app/shared/services/user.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Component({
   selector: 'app-transportations',
@@ -17,10 +20,14 @@ export class TransportationsPage implements OnInit {
   pageSize: number = 6;
   totalPages: number;
   favoriteStatus: {[key: string]: boolean} = {};
+  user: User;
 
-  constructor(private transportationService: TransportationService) {}
+  constructor(private transportationService: TransportationService, private userService: UserService,private authService:AuthService) {}
 
   ngOnInit() {
+    this.user = this.authService.authUser;
+    console.log("user",this.user)
+    
     this.transportationService.collection().valueChanges().subscribe(data => {
       this.transportations = data;
       this.allTransportations = data;
@@ -30,16 +37,35 @@ export class TransportationsPage implements OnInit {
       });
       this.updatePagedPackages(0);
     });
+    this.getUserFavorites().subscribe(favorites => {
+      favorites.forEach(favorite => {
+        this.favoriteStatus[favorite.id] = true;
+      });
+    });
   }
 
-  toggleFavorite(destination: Transportation) {
-    const isCurrentlyFavorite = this.favoriteStatus[destination.id] || false;
-    this.favoriteStatus[destination.id] = !isCurrentlyFavorite;
-    console.log("Selected Destination:", destination);
-    console.log("Favorite Status:", this.favoriteStatus[destination.id]);
+  getUserFavorites() {
+    return this.userService.collection().doc(this.user?.uid).collection('Transportation').valueChanges();
+  }
 
-    const ref = this.transportationService.doc(destination.id);
-    return ref.update({ isFavorite: this.favoriteStatus[destination.id] });
+  addFavorite(activity: Transportation) {
+    return this.userService.collection().doc(this.user?.uid).collection('Transportation').doc(activity.id).set(activity);
+  }
+
+  removeFavorite(activityId: string) {
+    return this.userService.collection().doc(this.user?.uid).collection('Transportation').doc(activityId).delete();
+  }
+
+  toggleFavorite(activity: Transportation) {
+    if (this.favoriteStatus[activity.id]) {
+      this.removeFavorite(activity.id).then(() => {
+        this.favoriteStatus[activity.id] = false;
+      });
+    } else {
+      this.addFavorite(activity).then(() => {
+        this.favoriteStatus[activity.id] = true;
+      });
+    }
   }
 
    // Other methods remain the same

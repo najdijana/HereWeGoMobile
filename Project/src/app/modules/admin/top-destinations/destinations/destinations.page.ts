@@ -3,6 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { TopDestinationService } from './service/topdestination.service';
 import { Observable } from 'rxjs';
 import { TopDest } from 'src/app/shared/models/topdest.interface';
+import { User } from 'src/app/shared/models/user.interface';
+import { UserService } from 'src/app/shared/services/user.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Component({
   selector: 'app-destinations',
@@ -13,11 +16,15 @@ export class DestinationsPage implements OnInit {
 
   public destinationName: string;
   TopDest: Observable<TopDest[]>;
+  user: User;
 
   private activatedRoute = inject(ActivatedRoute);
-  constructor(private topDestinationService:TopDestinationService) {}
+  constructor(private topDestinationService:TopDestinationService, private userService: UserService,private authService:AuthService) {}
 
   ngOnInit() {
+    this.user = this.authService.authUser;
+    console.log("user",this.user)
+
     this.destinationName = this.activatedRoute.snapshot.paramMap.get('name');
     console.log("this.destinationName",this.destinationName)
 
@@ -25,5 +32,6 @@ export class DestinationsPage implements OnInit {
       ref.where('Governate', '==', this.destinationName)
     ).valueChanges();
   }
+  
 
 }

@@ -4,6 +4,9 @@ import { Observable } from 'rxjs';
 import { TopDest, destination } from 'src/app/shared/models/topdest.interface';
 import { PopoverController } from '@ionic/angular';
 import { FilterDestinationsComponent } from './filter-destinations/filter-destinations.component';
+import { User } from 'src/app/shared/models/user.interface';
+import { UserService } from 'src/app/shared/services/user.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Component({
   selector: 'app-topdestinations-leb',
@@ -25,10 +28,13 @@ export class TopdestinationsLebPage implements OnInit {
   maxPrice: number;
   activity: string;
   favoriteStatus: {[key: string]: boolean} = {};
+  user: User;
 
-  constructor(private topDestinationService: TopDestinationService, private popoverController: PopoverController) {}
+  constructor(private topDestinationService: TopDestinationService, private popoverController: PopoverController, private userService: UserService,private authService:AuthService) {}
 
   ngOnInit() {
+    this.user = this.authService.authUser;
+    console.log("user",this.user)
     this.topDestinationService.collection().valueChanges({ idField: 'id' }).subscribe(data => {
       this.topDestinations = data;
       this.allDestinations = data;
@@ -38,19 +44,37 @@ export class TopdestinationsLebPage implements OnInit {
       });
       this.updatePagedDestinations(0);
     });
+    this.getUserFavorites().subscribe(favorites => {
+      favorites.forEach(favorite => {
+        this.favoriteStatus[favorite.id] = true;
+      });
+    });
   }
 
 
-  toggleFavorite(destination: TopDest) {
-    const isCurrentlyFavorite = this.favoriteStatus[destination.id] || false;
-    this.favoriteStatus[destination.id] = !isCurrentlyFavorite;
-    console.log("Selected Destination:", destination);
-    console.log("Favorite Status:", this.favoriteStatus[destination.id]);
-
-    const ref = this.topDestinationService.doc(destination.id);
-    return ref.update({ isFavorite: this.favoriteStatus[destination.id] });
+  getUserFavorites() {
+    return this.userService.collection().doc(this.user?.uid).collection('TopDestinations').valueChanges();
   }
 
+  addFavorite(activity: TopDest) {
+    return this.userService.collection().doc(this.user?.uid).collection('TopDestinations').doc(activity.id).set(activity);
+  }
+
+  removeFavorite(activityId: string) {
+    return this.userService.collection().doc(this.user?.uid).collection('TopDestinations').doc(activityId).delete();
+  }
+
+  toggleFavorite(activity: TopDest) {
+    if (this.favoriteStatus[activity.id]) {
+      this.removeFavorite(activity.id).then(() => {
+        this.favoriteStatus[activity.id] = false;
+      });
+    } else {
+      this.addFavorite(activity).then(() => {
+        this.favoriteStatus[activity.id] = true;
+      });
+    }
+  }
 
   updatePagedDestinations(pageIndex: number) {
     const startIndex = pageIndex * this.pageSize;

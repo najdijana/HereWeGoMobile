@@ -50,16 +50,15 @@ export class PackagesPage implements OnInit {
   }
 
   async getReviewsForPackage(pkg: Packages) {
-    // this.reviewService.setParentPathPackage(pkg.id);
     const reviewsSnapshot = await this.packageService.collection().doc(pkg.id).collection('review').get().toPromise();
     const reviews = reviewsSnapshot.docs.map(doc => doc.data() as Review);
-
+  
     pkg.nbreviews = reviews.length;
     if (reviews.length > 0) {
       const totalRating = reviews.reduce((sum, review) => sum + (review.rate || 0), 0);
-      pkg.review = totalRating / reviews.length;
+      pkg.review = parseFloat((totalRating / reviews.length).toFixed(1));
     } else {
-      pkg.review = 0;
+      pkg.review = 0.0; // Ensure consistent formatting
     }
   }
 
