@@ -3,13 +3,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Packages, Plan } from 'src/app/shared/models/packages.interface';
 import { GmapserviceService } from '../services/gmapservice.service';
-declare var google: any;
 import { Review } from 'src/app/shared/models/review.interface';
 import { User } from 'src/app/shared/models/user.interface';
 import { ReviewService } from './reviews.service';
 import { debounceTime, tap } from 'rxjs';
 import { AuthService } from 'src/app/shared/services/auth.service';
-
+declare var google: any;
 @Component({
   selector: 'app-tracking-trip-stepper',
   templateUrl: './tracking-trip-stepper.page.html',
@@ -23,10 +22,10 @@ export class TrackingTripStepperPage implements OnInit,AfterViewInit {
   tripPlan: Plan[] = [];
   package: Packages;
   googleMaps: any;
-  center = {
-    lat: 33.888630,
-    lng: 35.495480,
-  };
+  // center = {
+  //   lat: 33.888630,
+  //   lng: 35.495480,
+  // };
   map: any;
   marker: any;
   mapListener: any;

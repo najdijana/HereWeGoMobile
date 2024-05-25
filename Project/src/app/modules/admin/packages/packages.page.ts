@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Packages } from 'src/app/shared/models/packages.interface';
-import { PopoverController } from '@ionic/angular';
+import { LoadingController, PopoverController } from '@ionic/angular';
 import { FilterPackagesComponent } from './filter-packages/filter-packages.component';
 import { PackageService } from './Services/packages.service';
 import { Review } from 'src/app/shared/models/review.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-packages',
@@ -27,7 +28,13 @@ export class PackagesPage implements OnInit {
   selectedSortOption: string = 'sort by'; // Default sort option
   totalPages: number;
 
-  constructor(private packageService: PackageService, private popoverController: PopoverController) {}
+
+  constructor(
+    private packageService: PackageService, 
+    private popoverController: PopoverController,
+    private loadingController: LoadingController,
+    private router: Router // Inject the Router service
+) {}
 
   ngOnInit() {
     this.getPackages();
@@ -36,19 +43,41 @@ export class PackagesPage implements OnInit {
   add(packg:Packages){
     //this.guiderService.collection().doc("QDl5K7sVdsfxRwQpmJqVJarppmj1").collection('packages').doc(packg.id).set(packg, {merge: true});
   }
-
-  getPackages() {
-    this.packageService.collection().valueChanges().subscribe(async packages => {
-      this.packages = packages;
-      this.allPackages = packages;
-      this.filteredPackages = packages;
-      for (const pkg of this.packages) {
-        await this.getReviewsForPackage(pkg);
-      }
-      this.updatePagedPackages(0);
-    });
+  isToday(date: Date): boolean {
+    const today = new Date();
+    return (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    );
   }
 
+  
+
+  getPackages() {
+    const todayPlusOne = new Date();
+    todayPlusOne.setDate(todayPlusOne.getDate() + 1);
+  
+    this.packageService.collection(ref => ref.where('startDate', '>', todayPlusOne))
+      .valueChanges()
+      .subscribe(async packages => {
+        const loading = await this.loadingController.create({
+          message: 'Loading Packages...',
+        });
+        await loading.present();
+  
+        this.packages = packages;
+        this.allPackages = packages;
+        this.filteredPackages = packages;
+  
+        for (const pkg of this.packages) {
+          await this.getReviewsForPackage(pkg);
+        }
+  
+        this.updatePagedPackages(0);
+        loading.dismiss();
+      });
+  }
   async getReviewsForPackage(pkg: Packages) {
     const reviewsSnapshot = await this.packageService.collection().doc(pkg.id).collection('review').get().toPromise();
     const reviews = reviewsSnapshot.docs.map(doc => doc.data() as Review);

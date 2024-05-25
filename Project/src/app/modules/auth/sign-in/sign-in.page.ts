@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { FormBuilder, FormGroup, NgForm, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { User } from 'src/app/shared/models/user.interface';
 import { AuthService } from 'src/app/shared/services/auth.service';
 
@@ -31,7 +32,8 @@ export class SignInPage implements OnInit {
 
   constructor(private auth : AuthService,
     private _afa: AngularFireAuth,
-    private formBuilder: UntypedFormBuilder) { }
+    private formBuilder: UntypedFormBuilder,
+    private router: Router) { }
   ngOnInit(): void {
     this.signInForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -93,7 +95,8 @@ export class SignInPage implements OnInit {
             this.auth.authUser=res?.user;
             this.auth.initFirestoreUserListener(res?.user);
             console.log("Signed In successfully",this.auth.authUser,this.auth.firestoreUser);
-          }
+            this.router.navigate(['/home']); // Navigate to the home page on successful login
+        }
          
         })
         .catch((err: {
@@ -130,6 +133,8 @@ export class SignInPage implements OnInit {
         .then((res) => {
           console.log("authuser : ",this.auth.authUser)
           console.log("firestoreUser : ",this.auth.firestoreUser)
+          this.router.navigate(['/home']); // Navigate to the home page on successful Google sign-in
+      
         })
         .catch((err) => {
             // Re-enable the form
@@ -155,6 +160,8 @@ export class SignInPage implements OnInit {
     this.showAlert = false;
     this.auth.facebookSignIn()
         .then((res) => {
+          this.router.navigate(['/home']); // Navigate to the home page on successful Google sign-in
+      
         })
         .catch((err) => {
             // Re-enable the form

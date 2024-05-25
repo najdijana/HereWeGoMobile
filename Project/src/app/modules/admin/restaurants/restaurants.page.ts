@@ -28,8 +28,8 @@ export class RestaurantsPage  implements OnInit {
   ngOnInit() {
     this.user = this.authService.authUser;
     console.log("user",this.user)
-
-    this.restaurantsService.collection().valueChanges().subscribe(data => {
+    this.restaurantsService.collection(ref => ref.where('published', '==', true))
+    .valueChanges().subscribe(data => {
       this.restaurants = data;
       this.allRestaurants = data;
       this.filteredRestaurants = data;

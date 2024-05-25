@@ -42,13 +42,15 @@ export class ActivitiesPage implements OnInit {
   }
 
   getActivities() {
-    this.activitiesService.collection().valueChanges().subscribe(activities => {
+    this.activitiesService.collection(ref => ref.where('published', '==', true))
+    .valueChanges()
+    .subscribe(activities => {
       this.activities = activities;
       this.allActivities = activities;
       this.filteredActivities = activities;
       this.updatePagedActivities(0);
     });
-  }
+}
 
   getUserFavorites() {
     return this.userService.collection().doc(this.user?.uid).collection('Activities').valueChanges();

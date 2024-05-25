@@ -30,7 +30,8 @@ export class AccomodationsPage implements OnInit {
     this.user = this.authService.authUser;
     console.log("user",this.user)
 
-    this.accommodationService.collection().valueChanges().subscribe(data => {
+    this.accommodationService.collection(ref => ref.where('published', '==', true))
+    .valueChanges().subscribe(data => {
       this.accommodations = data;
       this.allAccommodations = data;
       this.filteredAccommodations = data;

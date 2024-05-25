@@ -17,6 +17,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ProfileResolver } from './modules/auth/user-profile/profile.resolver';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent],
@@ -30,7 +31,8 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     FormsModule,
     CommonModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    HttpClientModule ,
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

@@ -14,14 +14,11 @@
     </ion-toolbar>
   </ion-header>
 
-  <mat-horizontal-stepper>
+  <mat-horizontal-stepper (selectionChange)="stepChanged($event)">
     <mat-step *ngFor="let day of tripPlan; let i = index" [stepControl]="dayForm">
       <form [formGroup]="dayForm">
         <div *ngFor="let todo of day.todo" class="mb-8">
           <mat-checkbox [checked]="isChecked(todo.description)" [disabled]="true" color="primary">{{ todo.description }}</mat-checkbox>
-        </div>
-        <div class="mt-4">
-          <img src="../../../../../assets/img/googl_ED.jpg" alt="">
         </div>
         <div class="step-buttons">
           <button mat-stroked-button matStepperPrevious *ngIf="i > 0" >Back</button>
@@ -52,4 +49,6 @@
       </form>
     </mat-step>
   </mat-horizontal-stepper>
+  <div [class.hidden-map]="currentStepIndex === tripPlan.length " class="map mt-4" #map></div>
+
 </ion-content>

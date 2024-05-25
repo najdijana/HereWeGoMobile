@@ -28,7 +28,8 @@ export class TransportationsPage implements OnInit {
     this.user = this.authService.authUser;
     console.log("user",this.user)
     
-    this.transportationService.collection().valueChanges().subscribe(data => {
+    this.transportationService.collection(ref => ref.where('published', '==', true))
+    .valueChanges().subscribe(data => {
       this.transportations = data;
       this.allTransportations = data;
       this.filteredTransportations = data;

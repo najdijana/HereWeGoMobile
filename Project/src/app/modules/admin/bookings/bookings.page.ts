@@ -17,7 +17,7 @@ export class BookingsPage implements OnInit {
   user: User;
   payments: Payments[];
   groupedPayments: { date: Date, payments: Payments[] }[];
-  dateString:any;
+ dateString: any;
   constructor(
     private userService: UserService,
     private route: ActivatedRoute,
@@ -65,17 +65,16 @@ export class BookingsPage implements OnInit {
       .valueChanges()
       .subscribe(
         (review) => {
-          if(review){
+          if(review[0]){
             console.log("review",review[0]);
             this.router.navigate(['bookings',packageid,'history-tracking-stepper',review[0].id])
-            // [routerLink]="'/bookings/' + payment.package.id + '/trip-history'" 
+            // [routerLink]="'/bookings/' + payment.package.id + '/trip-history'"
           }
           else{
             this.router.navigate(['bookings',packageid,'tracking-trip-stepper'])
-
           }
         }
-      );     
+      );    
     }
 
     groupPaymentsByDate() {
