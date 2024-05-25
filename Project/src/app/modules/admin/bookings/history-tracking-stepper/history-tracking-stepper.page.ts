@@ -43,6 +43,12 @@ export class HistoryTrackingStepperPage implements OnInit {
         this.checkedDescriptions = review.description || [];
         this.rating = review.rate || 0;
       }
+      else{
+        this.review = null;
+        this.dayForm.patchValue(review);
+        this.checkedDescriptions = [];
+        this.rating = 0;
+      }
     });
     //const review = this.route.snapshot.data.review as Review;
   }
