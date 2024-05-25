@@ -34,8 +34,7 @@
         name="heart" 
         class="absolute top-4 right-4 text-3xl"
         [ngClass]="{'text-red-500': favoriteStatus[activity.id], 'text-green-500': !favoriteStatus[activity.id]}"
-        (click)="toggleFavorite(activity)">
-      </ion-icon>
+        (click)="toggleFavorite(activity)"></ion-icon>
           </div>
       <div class="p-4 space-y-1">
         <h2 class="text-lg font-semibold text-gray-900">{{ activity.Activity }}</h2>

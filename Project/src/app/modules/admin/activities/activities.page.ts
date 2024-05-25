@@ -3,6 +3,9 @@ import { PopoverController } from '@ionic/angular';
 import { Activities } from 'src/app/shared/models/activities.interface';
 import { ActivitiesService } from './services/activities.services';
 import { FilterActivitiesComponent } from './filter-activities/filter-activities.component';
+import { UserService } from 'src/app/shared/services/user.service';
+import { User } from 'src/app/shared/models/user.interface';
+import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Component({
   selector: 'app-activities',
@@ -23,35 +26,52 @@ export class ActivitiesPage implements OnInit {
   selectedSortOption: string = 'sort by'; // Default sort option
   totalPages: number;
   favoriteStatus: {[key: string]: boolean} = {};
+  user: User;
 
-  constructor(private activitiesService: ActivitiesService, private popoverController: PopoverController) {}
-
+  constructor(private activitiesService: ActivitiesService, private popoverController: PopoverController, private userService: UserService,private authService:AuthService) {}
 
   ngOnInit() {
+    this.user = this.authService.authUser;
+    console.log("user",this.user)
     this.getActivities();
+    this.getUserFavorites().subscribe(favorites => {
+      favorites.forEach(favorite => {
+        this.favoriteStatus[favorite.id] = true;
+      });
+    });
   }
-
 
   getActivities() {
     this.activitiesService.collection().valueChanges().subscribe(activities => {
       this.activities = activities;
       this.allActivities = activities;
       this.filteredActivities = activities;
-      activities.forEach((destination: Activities) => {
-        this.favoriteStatus[destination.id] = destination.isFavorite || false;
-      });
       this.updatePagedActivities(0);
     });
   }
 
-  toggleFavorite(destination: Activities) {
-    const isCurrentlyFavorite = this.favoriteStatus[destination.id] || false;
-    this.favoriteStatus[destination.id] = !isCurrentlyFavorite;
-    console.log("Selected Destination:", destination);
-    console.log("Favorite Status:", this.favoriteStatus[destination.id]);
+  getUserFavorites() {
+    return this.userService.collection().doc(this.user?.uid).collection('Activities').valueChanges();
+  }
 
-    const ref = this.activitiesService.doc(destination.id);
-    return ref.update({ isFavorite: this.favoriteStatus[destination.id] });
+  addFavorite(activity: Activities) {
+    return this.userService.collection().doc(this.user?.uid).collection('Activities').doc(activity.id).set(activity);
+  }
+
+  removeFavorite(activityId: string) {
+    return this.userService.collection().doc(this.user?.uid).collection('Activities').doc(activityId).delete();
+  }
+
+  toggleFavorite(activity: Activities) {
+    if (this.favoriteStatus[activity.id]) {
+      this.removeFavorite(activity.id).then(() => {
+        this.favoriteStatus[activity.id] = false;
+      });
+    } else {
+      this.addFavorite(activity).then(() => {
+        this.favoriteStatus[activity.id] = true;
+      });
+    }
   }
 
   updatePagedActivities(pageIndex: number) {
@@ -77,8 +97,6 @@ export class ActivitiesPage implements OnInit {
     }, 500);
   }
 
-
-  
   filterActivities() {
     this.filteredActivities = this.allActivities.filter(activity => {
       const nameMatch = this.searchQuery
@@ -94,8 +112,6 @@ export class ActivitiesPage implements OnInit {
 
     this.updatePagedActivities(0); // Reapply pagination
   }
-
-
 
   async presentFilterPopover(ev: any) {
     const popover = await this.popoverController.create({
@@ -118,7 +134,6 @@ export class ActivitiesPage implements OnInit {
 
     await popover.present();
   }
-
 
   sortActivities() {
     if (!this.selectedSortOption) return;
