@@ -21,16 +21,11 @@
         <div *ngFor="let todo of day.todo" class="mb-8">
           <mat-checkbox (change)="updateForm($event,todo.description)" color="primary">{{ todo.description }}</mat-checkbox>
         </div>
-        <!--
-        <div class="mt-4">
-          <img src="../../../../../assets/img/googl_ED.jpg" alt="">
-        </div>
--->
+ 
         <div class="step-buttons">
           <button mat-stroked-button matStepperPrevious *ngIf="i > 0">Back</button>
           <button mat-flat-button matStepperNext color="primary" *ngIf="i <= tripPlan.length - 1">Next</button>
         </div>
-
        
       </form>
     </mat-step>

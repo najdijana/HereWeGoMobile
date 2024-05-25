@@ -7,18 +7,27 @@ import { AuthService } from './shared/services/auth.service';
 })
 export class AppComponent implements OnInit {
   public appPages = [
-    { title: 'home', url: '/loader', icon: 'trash' },
-    { title: 'All Destinations', url: '/topdestinations-leb', icon: 'mail' },
+    { title: 'Home', url: '/loader', icon: 'home' },
+    { title: 'All Destinations', url: '/topdestinations-leb', icon: 'map' },
     { title: 'Destinations', url: '/top-destinations', icon: 'paper-plane' },
     { title: 'Packages', url: '/packages', icon: 'heart' },
-    { title: 'favorites', url: '/favorites', icon: 'archive' },
-    { title: 'bookings', url: '/bookings', icon: 'warning' },
-    { title: 'user Profile', url: '/user-profile/:id', icon: 'warning' },
+    { title: 'Favorites', url: '/favorites', icon: 'archive' },
+    { title: 'Bookings', url: '/bookings', icon: 'ticket' },
+    { title: 'Site Detection', url: '/image-location-detector', icon: 'wand' },
+    { title: 'Restaurants', url: '/restaurants', icon: 'restaurant' },
+    { title: 'Activities', url: '/activities', icon: 'brush' },
+    { title: 'Lodges', url: '/accommodations', icon: 'bed' },
+    { title: 'Transportation', url: '/transportations', icon: 'car' },
+    { title: 'Signout', action: () => this.logout(), icon: 'log-out', url: '/sign-in' },
+
 
   ];
-  public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
   constructor(public auth:AuthService) {}
   ngOnInit(): void {
       // this.auth.logout()
+  }
+  
+  logout(): void {
+    this.auth.logout();
   }
 }
