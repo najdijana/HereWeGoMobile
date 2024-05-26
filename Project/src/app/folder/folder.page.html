@@ -86,26 +86,33 @@
 
     <ion-row>
       <ion-col>
-        <ion-header >
+        <ion-header>
+          <ion-toolbar>
             <ion-title size="large">Top Destinations</ion-title>
+            <ion-buttons slot="end">
+              <ion-button fill="clear" [routerLink]="['/destinations']">
+                View More
+              </ion-button>
+            </ion-buttons>
+          </ion-toolbar>
         </ion-header>
-      
+    
         <ion-grid>
-        <ion-row>
-          <ion-col size="6" *ngFor="let destination of destinations">
-            <div [routerLink]="'destinations/' + destination?.name"  class="relative">
-              <img [src]="destination.image" alt="{{ destination.name }}" class="w-full h-40 object-cover rounded-lg shadow-2xl">
-              <div class="absolute inset-x-0 bottom-0 bg-black bg-opacity-50 text-white p-2 rounded-b-lg">
-                <h3 class="text-sm">{{ destination.name }}</h3>
-                <p class="text-xs">{{ destination.cities }} destinations</p>
+          <ion-row>
+            <ion-col size="6" *ngFor="let destination of destinations">
+              <div [routerLink]="'/destinations/' + destination?.name" class="relative">
+                <img [src]="destination.image" alt="{{ destination.name }}" class="w-full h-40 object-cover rounded-lg shadow-2xl">
+                <div class="absolute inset-x-0 bottom-0 bg-black bg-opacity-50 text-white p-2 rounded-b-lg">
+                  <h3 class="text-sm">{{ destination.name }}</h3>
+                  <p class="text-xs">{{ destination.cities }} destinations</p>
+                </div>
               </div>
-            </div>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-      
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </ion-col>
     </ion-row>
+    
 
 
     <ion-row>
