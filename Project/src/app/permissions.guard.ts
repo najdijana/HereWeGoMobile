@@ -1,28 +1,43 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
-import { AuthService } from './shared/services/auth.service';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router, UrlTree } from '@angular/router';
+import { Observable, of } from 'rxjs';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { map, take, tap, switchMap } from 'rxjs/operators';
+import { User } from './shared/models/user.interface';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
+  constructor(
+    private afAuth: AngularFireAuth,
+    private firestore: AngularFirestore,
+    private router: Router
+  ) {}
 
-  constructor(private authService: AuthService, private router: Router) {}
-
-  canActivate(
-    next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.authService.currentUser$.pipe(
-      take(1), // Ensure the subscription completes after receiving the first value
-      map(user => {
-        const isAuthenticated = !!user; // Check if user is logged in
-        if (isAuthenticated) {
-          return true; // Proceed to the requested route
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
+    return this.afAuth.authState.pipe(
+      take(1),
+      switchMap(user => {
+        if (user) {
+          return this.firestore.doc<User>(`users/${user.uid}`).valueChanges().pipe(
+            take(1),
+            map(userData => {
+              if (userData) {
+                return true;
+              } else {
+                this.router.navigate(['/sign-in']);
+                return false;
+              }
+            })
+          );
         } else {
-          // User is not logged in, redirect to the sign-in page
-          return this.router.createUrlTree(['/sign-in']);
+          this.router.navigate(['/sign-in']);
+          return of(false);
+        }
+      }),
+      tap(loggedIn => {
+        if (!loggedIn) {
+          this.router.navigate(['/sign-in']);
         }
       })
     );

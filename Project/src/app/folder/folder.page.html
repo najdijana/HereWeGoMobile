@@ -50,7 +50,7 @@
           <ion-card class="collection-card" [routerLink]="['/accommodations']">
             <img src="../../assets/img/accommodation.jpeg" />
             <ion-card-header>
-              <ion-card-title>Lodges</ion-card-title>
+              <ion-card-title class="text-sm">Accommodations</ion-card-title>
             </ion-card-header>
           </ion-card>
         </div>
@@ -90,7 +90,7 @@
           <ion-toolbar>
             <ion-title size="large">Top Destinations</ion-title>
             <ion-buttons slot="end">
-              <ion-button fill="clear" [routerLink]="['/destinations']">
+              <ion-button fill="clear" routerLink="/top-destinations">
                 View More
               </ion-button>
             </ion-buttons>
@@ -100,7 +100,7 @@
         <ion-grid>
           <ion-row>
             <ion-col size="6" *ngFor="let destination of destinations">
-              <div [routerLink]="'/destinations/' + destination?.name" class="relative">
+              <div [routerLink]="'/top-destinations/destinations/' + destination?.name" class="relative">
                 <img [src]="destination.image" alt="{{ destination.name }}" class="w-full h-40 object-cover rounded-lg shadow-2xl">
                 <div class="absolute inset-x-0 bottom-0 bg-black bg-opacity-50 text-white p-2 rounded-b-lg">
                   <h3 class="text-sm">{{ destination.name }}</h3>

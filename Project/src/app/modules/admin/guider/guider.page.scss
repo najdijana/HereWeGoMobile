@@ -1,0 +1,31 @@
+.no-spacing {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .info-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    padding: 0.5rem 0;
+  }
+  
+  .info-item ion-icon {
+    margin-right: 10px;
+    color: var(--ion-color-primary); /* Optional: Set the color of the icons */
+  }
+  
+  .info-item .label {
+    flex: 0 0 auto;
+    margin-right: 10px; /* Adjust as necessary */
+    font-weight: bold;
+  }
+  
+  .info-item .value {
+    flex: 1 1 auto;
+  }
+  

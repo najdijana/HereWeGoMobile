@@ -119,13 +119,15 @@ resetEveryThing(): void {
   }
 
   // sign out
-  logout() {
-    this.fireauth.signOut().then( () => {
-      this.reInitSubscription()
-      console.log("logged out")
-    }, err => {
+  logout(): void {
+    this.fireauth.signOut().then(() => {
+      this.reInitSubscription();
+      console.log("Logged out successfully");
+      this.router.navigate(['/sign-in']);
+    }).catch(err => {
       alert(err.message);
-    })
+      console.error("Logout error:", err.message);
+    });
   }
 
   // forgot password
@@ -146,6 +148,7 @@ resetEveryThing(): void {
         displayName:res?.user?.displayName
       }
       this.afs.doc<User>(`users/${data.uid}`).set(data, {merge: true});
+      this.initFirestoreUserListener(this.authUser);
       console.log(this.authUser.email,this.authUser.uid,this.firestoreUser);
       console.log("signed In successfully")
     }, err => {

@@ -3,9 +3,14 @@ line="full"
 (click)="redirect()"
 detail="true">
 <ion-avatar slot="start">
-<img [src]="item?.profilePicture" />
+<img [src]="item?.profilePicture?? '../../../../../assets/img/avatar.jpg'" />
 </ion-avatar>
 <ion-label>
-  {{item?.firstName}}  {{item?.lastName}}
+  <ng-container *ngIf="item?.firstName && item?.lastName; else displayName">
+    {{item.firstName}} {{item.lastName}}
+  </ng-container>
+  <ng-template #displayName>
+    {{item?.displayName}}
+  </ng-template>
 </ion-label>
 </ion-item>

@@ -7,7 +7,7 @@ import { UserService } from 'src/app/shared/services/user.service';
 import { PaymentStatus, Payments } from 'src/app/shared/models/payments.interface';
 import { User } from 'src/app/shared/models/user.interface';
 import { SuccessModalComponent } from './success-modal/success-modal.component';
-import { ModalController } from '@ionic/angular';
+import { ModalController, NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-payment',
@@ -26,9 +26,13 @@ export class PaymentPage implements OnInit {
     private router: Router,
     private paymentService: PaymentsService,
     private userService: UserService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private navCtrl: NavController
   ) {}
 
+  goBack() {
+    this.navCtrl.back();
+  }
   ngOnInit() {
     this.package = this.route.snapshot.data.package as Packages;
     this.user = this.route.snapshot.data.userData as User;
@@ -66,6 +70,8 @@ export class PaymentPage implements OnInit {
       },
     });
   }
+
+  
 
   handlePayment(event: Event) {
     event.preventDefault();

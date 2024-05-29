@@ -6,6 +6,7 @@ import { Guiders } from 'src/app/shared/models/guiders.interface';
 import { Packages } from 'src/app/shared/models/packages.interface';
 import { GuiderService } from '../service/guider.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-guider-detail',
@@ -19,7 +20,8 @@ export class GuiderDetailPage implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private firestore: AngularFirestore
+    private firestore: AngularFirestore,
+    private navCtrl: NavController,
   ) {}
   ngOnInit() {
     const guiderId = this.route.snapshot.paramMap.get('id');
@@ -43,5 +45,7 @@ export class GuiderDetailPage implements OnInit {
   }
    
   addReview(){}
-
+  goBack() {
+    this.navCtrl.back();
+  }
 }

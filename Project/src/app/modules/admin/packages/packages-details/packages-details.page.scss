@@ -67,3 +67,7 @@ h1 {
   text-align: left;
   color: #333;
 }
+ion-label.full-width {
+  width: 100%;
+  white-space: normal; /* Ensures that text wraps to the next line */
+}

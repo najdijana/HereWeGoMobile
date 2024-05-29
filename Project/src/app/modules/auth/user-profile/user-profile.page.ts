@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, NgForm, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastController } from '@ionic/angular';
 import { Subject, debounceTime, takeUntil, tap } from 'rxjs';
 import { RoleTypeOptions, User } from 'src/app/shared/models/user.interface';
 import { AuthService } from 'src/app/shared/services/auth.service';
@@ -58,11 +59,12 @@ export class UserProfilePage implements OnInit {
               private router:Router,
               public formBuilder: UntypedFormBuilder,
               public storageService:ImageUploadService,
-              public authService:AuthService
+              public authService:AuthService,
+              private toastController: ToastController 
   ){}
 
   ngOnInit(): void {
-    this.user = this.route.snapshot?.data?.profileRoslver as User;
+    this.user = this.authService.firestoreUser as User;
     console.log("user is :",this.user);
 
      // Create the form
@@ -93,6 +95,16 @@ export class UserProfilePage implements OnInit {
       }
     });
     
+  }
+
+  async showToast(message: string, color: string) {
+    const toast = await this.toastController.create({
+      message,
+      color,
+      duration: 2000,
+      position: 'top'
+    });
+    toast.present();
   }
 
   listenOnValueChanges(){
@@ -170,6 +182,7 @@ export class UserProfilePage implements OnInit {
   onUpload() {
     // if (!this.selectedFile || !this.userForm.get('guiderCertificateName').value) {
     if (!this.selectedFile || !this.user.guiderCertificateName) {
+      this.showToast('No selected certificate!', 'danger'); // Show error toast
       return;
     }
     const formData = new FormData();
@@ -186,9 +199,11 @@ export class UserProfilePage implements OnInit {
               this.userForm.patchValue({ isValidCertificate: true });
               this.isValidCertificate=true;
               console.log('Image uploaded and form updated:', imageUrl);
+              this.showToast('Certificate validated and uploaded successfully!', 'primary'); // Show success toast
             },
             error: (error) => {
               console.error('Error uploading image:', error);
+              this.showToast('Error uploading certificate!', 'danger'); // Show error toast
             }
           });
         }else{
@@ -197,10 +212,13 @@ export class UserProfilePage implements OnInit {
           this.userForm.patchValue({ guiderCertificateName: null});
           this.userForm.patchValue({ isValidCertificate: false });
           this.userForm.patchValue({ guiderCertificateURL: null });
+          this.showToast('Invalid certificate!', 'danger'); // Show error toast
+
         }
       },
       (error) => {
         console.error('Error:', error);
+        this.showToast('Error validating certificate!', 'danger'); // Show error toast
       }
     );
   }
@@ -209,6 +227,7 @@ export class UserProfilePage implements OnInit {
   saveUser(){
     if (this.userForm.invalid && this.user?.role===this.roleTypeOptions.GUIDER && !this.user?.isValidCertificate) {
       this.userForm.markAllAsTouched();
+      this.showToast('No selected certificate!', 'danger'); // Show error toast
       return;
     }
    
